@@ -1,0 +1,33 @@
+{
+  "name": "peek-a-boo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm run --parallel dev:*",
+    "dev:dashboard": "pnpm run --filter apps/dashboard dev",
+    "dev:sdk-service": "pnpm run --filter apps/sdk-service start:dev",
+    "build": "pnpm run --parallel build:*",
+    "build:dashboard": "pnpm run --filter apps/dashboard build",
+    "build:sdk-service": "pnpm run --filter apps/sdk-service build",
+    "start": "pnpm run --parallel start:*",
+    "start:dashboard": "pnpm run --filter apps/dashboard start",
+    "start:sdk-service": "pnpm run --filter apps/sdk-service start",
+    "lint": "pnpm run --parallel lint:*",
+    "lint:dashboard": "pnpm run --filter apps/dashboard lint",
+    "lint:sdk-service": "pnpm run --filter apps/sdk-service lint",
+    "test": "pnpm run --parallel test:*",
+    "test:dashboard": "pnpm run --filter apps/dashboard test",
+    "test:sdk-service": "pnpm run --filter apps/sdk-service test",
+    "prisma:generate": "pnpm run --filter packages/shared prisma:generate",
+    "prisma:migrate:dev": "pnpm run --filter packages/shared prisma:migrate:dev",
+    "prisma:studio": "pnpm run --filter packages/shared prisma:studio",
+    "db:migrate": "pnpm run prisma:migrate:dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19"
+  }
+} 
