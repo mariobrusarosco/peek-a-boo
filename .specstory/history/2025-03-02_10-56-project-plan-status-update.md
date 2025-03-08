@@ -4665,7 +4665,151 @@ Update @004-turborepo-adoption.md with why and what are we doing on @vercel.json
 
 _**Assistant**_
 
+I'll update both documentation files:
 
+1. First, let's add the best practices to the development environment guide:
+
+---
+
+_****_
+
+```diff
+  ## Development Workflow
+  
++ ### Dependency Management Best Practices
++ 
++ To ensure consistent builds across development and CI environments:
++ 
++ 1. **After Dependency Changes**:
++    ```bash
++    # Always run after modifying package.json
++    pnpm install
++    ```
++    This updates the lockfile to match your dependency changes.
++ 
++ 2. **Version Control**:
++    - Always commit both `package.json` and `pnpm-lock.yaml`
++    - These files together ensure reproducible builds
++    - Never gitignore the lockfile
++ 
++ 3. **Local Verification**:
++    ```bash
++    # Use this to catch dependency mismatches early
++    pnpm install --frozen-lockfile
++    ```
++    This simulates CI behavior and ensures your lockfile is up-to-date.
++ 
++ 4. **Common Issues**:
++    - If you see `ERR_PNPM_OUTDATED_LOCKFILE`, run `pnpm install`
++    - If dependencies seem wrong, try `pnpm store prune` followed by `pnpm install`
++ 
+  ### Running Both Services
+  
+```
+
+---
+
+_****_
+
+2. Now, let's update the Turborepo ADR with details about our Vercel configuration:
+
+---
+
+_****_
+
+```diff
+  ```json
+  {
+-   "buildCommand": "cd ../.. && turbo run build --filter=@peek-a-boo/dashboard...",
++   "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && turbo run build --filter=@peek-a-boo/dashboard...",
+    "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+    "framework": "nextjs"
+  This configuration is crucial for optimal monorepo deployment:
+  
+- 1. **Build Command**:
++ 1. **Build Command Breakdown**:
+     - `cd ../..`: Navigates to the root of the monorepo
++    - `pnpm install --no-frozen-lockfile`: 
++      - Installs dependencies allowing lockfile updates
++      - Required because CI environments use `--frozen-lockfile` by default
++      - Prevents build failures when lockfile is out of sync
+     - `turbo run build --filter=@peek-a-boo/dashboard...`: 
+       - Uses Turborepo to run the build
+       - The `--filter` flag specifies which package to build
+       - The `...` suffix includes all dependencies of the dashboard
+  
+- 2. **Ignore Command**:
++ 2. **PNPM Version Handling**:
++    - Vercel auto-detects PNPM version from `pnpm-lock.yaml`
++    - Uses PNPM 9.x by default for existing projects
++    - Can be upgraded to PNPM 10.x using corepack
++    - Ensures consistent package manager behavior
++ 
++ 3. **Ignore Command**:
+     - `git diff --quiet HEAD^ HEAD ./`
+     - Checks if the dashboard directory has changed
+     - Prevents unnecessary rebuilds when other packages change
+     - Optimizes build time and resource usage
+  
+- 3. **Framework**:
++ 4. **Framework**:
+     - Explicitly sets `nextjs` as the framework
+     - Ensures proper build optimizations
+     - Enables Next.js-specific features in Vercel
+  
+  This setup ensures:
++ - Reliable dependency installation in CI
+  - Only necessary packages are built
+  - Dependencies are properly included
+```
+
+---
+
+_****_
+
+The documentation now:
+1. Provides clear best practices for dependency management in the development guide
+2. Explains in detail why and how we handle PNPM in our Vercel configuration
+3. Helps developers understand and avoid common deployment issues
+
+Would you like me to:
+1. Add more examples or troubleshooting scenarios?
+2. Add specific CI/CD best practices?
+3. Something else?
+
+---
+
+_**User**_
+
+Wow! This is getting really, really good!!! Thank you!
+
+---
+
+_**Assistant**_
+
+Thank you! Yes, we've built a solid foundation with:
+
+1. **Clear Development Practices**:
+   - Documented dependency management best practices
+   - Explicit instructions for common scenarios
+   - Troubleshooting guides for common issues
+
+2. **Well-Documented Architecture Decisions**:
+   - Detailed ADRs explaining our choices
+   - Clear rationale for using PNPM + Turborepo
+   - Comprehensive deployment configuration explanations
+
+3. **Future-Proof Setup**:
+   - Scalable monorepo structure
+   - Efficient build and caching system
+   - Cross-platform compatibility
+
+Would you like to proceed with:
+1. Setting up the dashboard features?
+2. Configuring authentication?
+3. Something else?
+
+The groundwork is laid, and we can now focus on building the actual feature flag platform with confidence in our infrastructure!
 
 ---
 
