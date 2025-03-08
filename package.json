@@ -12,7 +12,7 @@
     "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
   },
   "devDependencies": {
-    "turbo": "latest",
+    "turbo": "^2.1.0",
     "prettier": "^3.2.5"
   },
   "packageManager": "pnpm@8.15.4",

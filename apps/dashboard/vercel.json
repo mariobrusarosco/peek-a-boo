@@ -1,5 +1,4 @@
 {
-  "buildCommand": "cd ../.. && turbo run build --filter=@peek-a-boo/dashboard...",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+  "buildCommand": "cd ../.. && pnpm install && turbo run build --filter=@peek-a-boo/dashboard...",
   "framework": "nextjs"
 } 
