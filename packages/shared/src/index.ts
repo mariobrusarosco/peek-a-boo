@@ -1,29 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 
-// This file is the entry point for the shared package.
-let PrismaClientConstructor: any;
+// Export types and enums from Prisma
+export * from '@prisma/client';
 
-// Use a dynamic import pattern that TypeScript can understand
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  PrismaClientConstructor = PrismaClient;
-} catch (error) {
-  // If import fails, create a mock constructor
-  console.warn('Warning: @prisma/client not found. Using mock client.');
-  PrismaClientConstructor = class MockClient {
-    constructor() {
-      console.warn('Using mock client. Run `pnpm run prisma:generate` in the shared package.');
-    }
-  };
+// Create a singleton Prisma client
+declare global {
+  var prisma: PrismaClient | undefined;
 }
 
-// Create a singleton instance
-const globalAny = globalThis as any;
-export const prisma = globalAny.prisma || new PrismaClientConstructor();
+export const prisma = globalThis.prisma || new PrismaClient();
 
-// Store the instance in development only to prevent memory leaks
-if (process?.env?.NODE_ENV !== 'production') {
-  globalAny.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.prisma = prisma;
 }
 
 // Export helper types for usage throughout the application
