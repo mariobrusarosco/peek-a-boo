@@ -36,27 +36,11 @@ Both are contained within this monorepo structure:
 │   └── client-sdk/      # The JavaScript SDK for clients
 ├── docs/
 │   ├── decision/        # Architectural Decision Records
-│   └── dx/             # Developer Experience guides
+│   └── dx/              # Developer Experience guides
 ├── docker-compose.yml   # Local development services
 ├── pnpm-workspace.yaml  # PNPM workspace configuration
-├── turbo.json          # Turborepo configuration
-└── package.json        # Root package.json for workspaces
+└── package.json         # Root package.json for workspaces
 ```
-
-## Build System
-
-We use Turborepo as our build system orchestrator, which provides:
-- Incremental builds
-- Remote caching
-- Parallel execution
-- Task dependencies
-- Workspace filtering
-
-The build pipeline is defined in `turbo.json` and includes:
-- `build`: Builds all packages and applications
-- `dev`: Starts development servers
-- `lint`: Runs linting across the codebase
-- `test`: Runs tests with proper build dependencies
 
 ## Initial Setup
 
@@ -104,8 +88,9 @@ pnpm run db:migrate
 # From the root directory
 pnpm run dev:dashboard
 
-# Or using Turborepo directly
-turbo run dev --filter=@peek-a-boo/dashboard
+# Or from the dashboard directory
+cd apps/dashboard
+pnpm run dev
 ```
 
 The dashboard will be available at http://localhost:3000.
@@ -116,40 +101,14 @@ The dashboard will be available at http://localhost:3000.
 # From the root directory
 pnpm run dev:sdk-service
 
-# Or using Turborepo directly
-turbo run dev --filter=@peek-a-boo/sdk-service
+# Or from the sdk-service directory
+cd apps/sdk-service
+pnpm run start:dev
 ```
 
 The SDK service will be available at http://localhost:3001.
 
 ## Development Workflow
-
-### Dependency Management Best Practices
-
-To ensure consistent builds across development and CI environments:
-
-1. **After Dependency Changes**:
-   ```bash
-   # Always run after modifying package.json
-   pnpm install
-   ```
-   This updates the lockfile to match your dependency changes.
-
-2. **Version Control**:
-   - Always commit both `package.json` and `pnpm-lock.yaml`
-   - These files together ensure reproducible builds
-   - Never gitignore the lockfile
-
-3. **Local Verification**:
-   ```bash
-   # Use this to catch dependency mismatches early
-   pnpm install --frozen-lockfile
-   ```
-   This simulates CI behavior and ensures your lockfile is up-to-date.
-
-4. **Common Issues**:
-   - If you see `ERR_PNPM_OUTDATED_LOCKFILE`, run `pnpm install`
-   - If dependencies seem wrong, try `pnpm store prune` followed by `pnpm install`
 
 ### Running Both Services
 
@@ -159,17 +118,7 @@ We've provided a convenience script to run both services simultaneously:
 pnpm run dev
 ```
 
-This will start both the dashboard and SDK service in development mode using Turborepo's parallel execution.
-
-### Building the Project
-
-To build all applications and packages:
-
-```bash
-pnpm run build
-```
-
-This will execute the build pipeline defined in `turbo.json`, respecting dependencies between packages.
+This will start both the dashboard and SDK service in development mode.
 
 ### Database Management
 
@@ -193,17 +142,17 @@ pnpm run prisma:migrate:dev
 
 ### Working with Workspaces
 
-Our monorepo uses both PNPM workspaces and Turborepo for efficient package management:
+PNPM workspaces make it easy to work with packages in the monorepo:
 
 ```bash
 # Install dependencies across all workspaces
 pnpm install
 
 # Add a dependency to a specific workspace
-pnpm --filter @peek-a-boo/shared add @types/node --save-dev
+pnpm --filter packages/shared add @types/node --save-dev
 
 # Run a command in a specific workspace
-turbo run dev --filter=@peek-a-boo/dashboard
+pnpm --filter apps/dashboard test
 ```
 
 ### Testing
@@ -215,10 +164,10 @@ turbo run dev --filter=@peek-a-boo/dashboard
 pnpm test
 
 # Run dashboard tests
-turbo run test --filter=@peek-a-boo/dashboard
+pnpm run test:dashboard
 
 # Run SDK service tests
-turbo run test --filter=@peek-a-boo/sdk-service
+pnpm run test:sdk-service
 ```
 
 ## Code Quality Tools
@@ -229,8 +178,11 @@ turbo run test --filter=@peek-a-boo/sdk-service
 # Lint all code
 pnpm run lint
 
-# Lint specific workspace
-turbo run lint --filter=@peek-a-boo/dashboard
+# Lint dashboard code
+pnpm run lint:dashboard
+
+# Lint SDK service code
+pnpm run lint:sdk-service
 ```
 
 ### Formatting
@@ -239,14 +191,6 @@ turbo run lint --filter=@peek-a-boo/dashboard
 # Format all code
 pnpm run format
 ```
-
-## Deployment
-
-### Dashboard (Vercel)
-The dashboard is configured for deployment on Vercel with proper monorepo settings in `apps/dashboard/vercel.json`.
-
-### SDK Service
-The SDK service should be deployed to a Node.js-compatible hosting platform that supports WebSocket connections.
 
 ## Debugging
 
@@ -272,17 +216,6 @@ pnpm run dev:sdk-service:debug
 
 ## Common Issues and Solutions
 
-### Turborepo Cache Issues
-
-If you encounter cache-related issues:
-
-1. Clear the Turborepo cache:
-```bash
-turbo clean
-```
-
-2. Verify your `turbo.json` configuration.
-
 ### Database Connection Issues
 
 If you encounter database connection issues:
@@ -298,6 +231,19 @@ docker-compose logs postgres
 ```
 
 3. Verify your `.env` files have the correct database connection strings.
+
+### PNPM Workspace Issues
+
+If you encounter issues with PNPM workspaces:
+
+1. Try clearing the PNPM store:
+```bash
+pnpm store prune
+```
+
+2. Ensure your `pnpm-workspace.yaml` is correctly configured.
+
+3. Run `pnpm install --force` to rebuild the dependencies.
 
 ### Port Conflicts
 
