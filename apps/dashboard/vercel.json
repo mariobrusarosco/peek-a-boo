@@ -1,4 +1,4 @@
 {
-  "buildCommand": "cd ../.. && pnpm install && turbo run build --filter=@peek-a-boo/dashboard...",
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && turbo run build --filter=@peek-a-boo/dashboard...",
   "framework": "nextjs"
 } 
