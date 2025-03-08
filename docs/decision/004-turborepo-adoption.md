@@ -101,7 +101,7 @@ We will adopt Turborepo while maintaining our PNPM package management. This prov
 The `apps/dashboard/vercel.json` configuration:
 ```json
 {
-  "buildCommand": "cd ../.. && turbo run build --filter=@peek-a-boo/dashboard...",
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && turbo run build --filter=@peek-a-boo/dashboard...",
   "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
   "framework": "nextjs"
 }
@@ -109,25 +109,36 @@ The `apps/dashboard/vercel.json` configuration:
 
 This configuration is crucial for optimal monorepo deployment:
 
-1. **Build Command**:
+1. **Build Command Breakdown**:
    - `cd ../..`: Navigates to the root of the monorepo
+   - `pnpm install --no-frozen-lockfile`: 
+     - Installs dependencies allowing lockfile updates
+     - Required because CI environments use `--frozen-lockfile` by default
+     - Prevents build failures when lockfile is out of sync
    - `turbo run build --filter=@peek-a-boo/dashboard...`: 
      - Uses Turborepo to run the build
      - The `--filter` flag specifies which package to build
      - The `...` suffix includes all dependencies of the dashboard
 
-2. **Ignore Command**:
+2. **PNPM Version Handling**:
+   - Vercel auto-detects PNPM version from `pnpm-lock.yaml`
+   - Uses PNPM 9.x by default for existing projects
+   - Can be upgraded to PNPM 10.x using corepack
+   - Ensures consistent package manager behavior
+
+3. **Ignore Command**:
    - `git diff --quiet HEAD^ HEAD ./`
    - Checks if the dashboard directory has changed
    - Prevents unnecessary rebuilds when other packages change
    - Optimizes build time and resource usage
 
-3. **Framework**:
+4. **Framework**:
    - Explicitly sets `nextjs` as the framework
    - Ensures proper build optimizations
    - Enables Next.js-specific features in Vercel
 
 This setup ensures:
+- Reliable dependency installation in CI
 - Only necessary packages are built
 - Dependencies are properly included
 - Build caching is optimized

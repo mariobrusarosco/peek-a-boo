@@ -124,6 +124,33 @@ The SDK service will be available at http://localhost:3001.
 
 ## Development Workflow
 
+### Dependency Management Best Practices
+
+To ensure consistent builds across development and CI environments:
+
+1. **After Dependency Changes**:
+   ```bash
+   # Always run after modifying package.json
+   pnpm install
+   ```
+   This updates the lockfile to match your dependency changes.
+
+2. **Version Control**:
+   - Always commit both `package.json` and `pnpm-lock.yaml`
+   - These files together ensure reproducible builds
+   - Never gitignore the lockfile
+
+3. **Local Verification**:
+   ```bash
+   # Use this to catch dependency mismatches early
+   pnpm install --frozen-lockfile
+   ```
+   This simulates CI behavior and ensures your lockfile is up-to-date.
+
+4. **Common Issues**:
+   - If you see `ERR_PNPM_OUTDATED_LOCKFILE`, run `pnpm install`
+   - If dependencies seem wrong, try `pnpm store prune` followed by `pnpm install`
+
 ### Running Both Services
 
 We've provided a convenience script to run both services simultaneously:
