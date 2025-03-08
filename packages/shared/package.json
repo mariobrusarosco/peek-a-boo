@@ -1,0 +1,21 @@
+{
+  "name": "@peek-a-boo/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "prisma": "^5.4.1",
+    "typescript": "^5.2.2"
+  }
+} 

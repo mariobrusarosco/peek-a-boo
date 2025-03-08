@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && turbo run build --filter=@peek-a-boo/dashboard...",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+  "framework": "nextjs"
+} 

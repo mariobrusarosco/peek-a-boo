@@ -1,0 +1,20 @@
+{
+  "name": "@peek-a-boo/root",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "^3.2.5"
+  },
+  "packageManager": "pnpm@8.15.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+} 
