@@ -1,33 +1,20 @@
 {
-  "name": "peek-a-boo",
-  "version": "0.1.0",
+  "name": "@peek-a-boo/root",
   "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "^3.2.5"
+  },
+  "packageManager": "pnpm@8.15.4",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "scripts": {
-    "dev": "pnpm run --parallel dev:*",
-    "dev:dashboard": "pnpm --filter @peek-a-boo/dashboard run dev",
-    "dev:sdk-service": "pnpm --filter @peek-a-boo/sdk-service run start:dev",
-    "build": "pnpm run --parallel build:*",
-    "build:dashboard": "pnpm --filter @peek-a-boo/dashboard run build",
-    "build:sdk-service": "pnpm --filter @peek-a-boo/sdk-service run build",
-    "start": "pnpm run --parallel start:*",
-    "start:dashboard": "pnpm --filter @peek-a-boo/dashboard run start",
-    "start:sdk-service": "pnpm --filter @peek-a-boo/sdk-service run start",
-    "lint": "pnpm run --parallel lint:*",
-    "lint:dashboard": "pnpm --filter @peek-a-boo/dashboard run lint",
-    "lint:sdk-service": "pnpm --filter @peek-a-boo/sdk-service run lint",
-    "test": "pnpm run --parallel test:*",
-    "test:dashboard": "pnpm --filter @peek-a-boo/dashboard run test",
-    "test:sdk-service": "pnpm --filter @peek-a-boo/sdk-service run test",
-    "prisma:generate": "pnpm --filter @peek-a-boo/shared run prisma:generate",
-    "prisma:migrate:dev": "pnpm --filter @peek-a-boo/shared run prisma:migrate:dev",
-    "prisma:studio": "pnpm --filter @peek-a-boo/shared run prisma:studio",
-    "db:migrate": "pnpm run prisma:migrate:dev"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.19"
-  }
+  ]
 } 

@@ -3292,6 +3292,80 @@ This is more idiomatic PNPM usage and helps avoid potential issues with workspac
 
 ---
 
+_**User**_
+
+Great! Dev environment seems perfect! Now it's time to do a first deploy of the "dashboard" on Vercel.
+
+Since we're using a monorepo I've realize the Vercel won't identify the project automatically:
+"Error: No Next.js version could be detected in your project. Make sure `"next"` is installed in "dependencies" or "devDependencies"
+
+Which make sense! We need to tell them how to deploy the dashboard, how to deploy our sdk.
+
+
+Have we considered turborepo as monorepo? I can't remember. If yes, do you think it's a worth a refactor to handle the deploys with Vercel.
+
+
+
+---
+
+_**Assistant**_
+
+Let me check our ADRs and documentation to see if we considered Turborepo:
+
+---
+
+_****_
+
+<details>
+            <summary>Listed directory docs/decision • **3** results</summary>
+        
+| Name |
+|-------|
+| 📄 `003-pnpm-migration.md` |
+| 📄 `001-technology-stack.md` |
+| 📄 `002-hybrid-architecture.md` |
+
+</details>
+
+---
+
+_****_
+
+Yes, this is a great point! Looking at our current setup and the Vercel deployment issue, adopting Turborepo would be very beneficial. Here's why:
+
+1. **Current State**:
+   - We're using PNPM workspaces
+   - We have a hybrid architecture (Next.js + NestJS)
+   - We're planning to deploy to Vercel
+   - We're experiencing deployment identification issues
+
+2. **Why Turborepo Makes Sense Now**:
+   - **Native Vercel Integration**: Turborepo is built by Vercel and has first-class support
+   - **Build Caching**: Turborepo's caching would speed up our builds
+   - **Deployment Configuration**: Easier configuration for deploying different apps in a monorepo
+   - **Pipeline Definition**: Clear definition of build dependencies between packages
+
+3. **Migration Effort vs Benefits**:
+   - **Low Migration Cost**: We're still early in development
+   - **High Future Benefit**: Better DX, faster builds, easier deployments
+   - **Compatible**: Works perfectly with PNPM (we can keep our package manager)
+
+Let's create a new ADR for this decision:
+
+---
+
+_****_
+
+
+
+---
+
+_****_
+
+
+
+---
+
 
 
 ---
