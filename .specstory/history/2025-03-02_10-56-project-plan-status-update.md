@@ -5896,7 +5896,184 @@ First, let's modify the `.npmrc` file:
 
 _****_
 
+```diff
+  engine-strict=true
+  resolution-mode=highest 
+- use-node-version=18 
+```
 
+---
+
+_****_
+
+Now, let's add the Node.js version requirement to your root `package.json`:
+
+---
+
+_****_
+
+```diff
+    "name": "@peek-a-boo/root",
+    "private": true,
++   "engines": {
++     "node": ">=18.0.0"
++   },
+    "scripts": {
+      "build": "turbo run build",
+```
+
+---
+
+_****_
+
+Let's also add the engines field to your dashboard's `package.json` since that's what's being deployed to Vercel:
+
+---
+
+_****_
+
+```diff
+    "version": "0.1.0",
+    "private": true,
++   "engines": {
++     "node": ">=18.0.0"
++   },
+    "scripts": {
+      "dev": "next dev",
+```
+
+---
+
+_****_
+
+Now let's commit these changes and push them to GitHub:
+
+---
+
+_****_
+
+```bash
+git add . && git commit -m "[FIX] Replace use-node-version with engines field for Vercel compatibility" && git push origin main
+```
+
+```
+[main a210e8d] [FIX] Replace use-node-version with engines field for Vercel compatibility
+ 4 files changed, 2547 insertions(+), 2 deletions(-)
+Enumerating objects: 19, done.
+Counting objects: 100% (19/19), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (10/10), 19.98 KiB | 6.66 MiB/s, done.
+Total 10 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), completed with 7 local objects.
+To github.com:mariobrusarosco/peek-a-boo.git
+   c8cb33e..a210e8d  main -> main
+%
+                                 
+
+```
+
+---
+
+_****_
+
+I've made the following changes to fix the Vercel deployment issue:
+
+1. Removed `use-node-version=18` from `.npmrc` since Vercel doesn't support this configuration
+2. Added proper `engines` field in both:
+   - Root `package.json`
+   - Dashboard's `package.json` (`apps/dashboard/package.json`)
+
+The changes have been committed and pushed to GitHub. Vercel should now be able to deploy your project without the Node.js version error.
+
+Try deploying again - the error about `use-node-version` should be resolved. Let me know if you encounter any other issues!
+
+---
+
+_**User**_
+
+can you run a git status?
+
+---
+
+_**Assistant**_
+
+I'll check the Git status:
+
+---
+
+_****_
+
+```bash
+git status
+```
+
+```
+mario% git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+mario%
+```
+
+---
+
+_****_
+
+Your working directory is clean! All changes have been committed and pushed to the remote repository. The last commit we made was to fix the Vercel deployment by:
+1. Removing `use-node-version` from `.npmrc`
+2. Adding `engines` field to both root and dashboard `package.json` files
+
+You can try deploying to Vercel again now. Would you like me to help you with anything else?
+
+---
+
+_**User**_
+
+Before that:
+
+1) Can you ask me to run the push commands from now on? The add, commit commands, are fine, you can do it automatically
+2)  ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with <ROOT>/package.json
+
+This error is about that case we found earlier?
+
+---
+
+_**Assistant**_
+
+1. Absolutely! From now on, I'll let you handle the `git push` commands while I handle the local `git add` and `git commit`. That's a good practice since pushing to remote is a more critical operation.
+
+2. Yes, this error is related to the changes we made! The `ERR_PNPM_OUTDATED_LOCKFILE` error occurs because we modified the `package.json` files (adding the `engines` field) but haven't updated the lockfile. Let's fix this:
+
+---
+
+_****_
+
+```bash
+pnpm install
+```
+
+```
+Scope: all 3 workspace projects
+ WARN  Ignoring broken lockfile at /home/mario/Coding/peek-a-boo: Lockfile /home/mario/Coding/peek-a-boo/pnpm-lock.yaml not 
+compatible with current pnpm                                                                                                Pr
+ogress: resolved 0, reused 1, downloaded 0, added 0
+apps/dashboard                           |  WARN  deprecated eslint@8.57.1
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 111, reused 109, downloaded 0, added 0
+Progress: resolved 204, reused 188, downloaded 0, added 0
+Progress: resolved 431, reused 418, downloaded 0, added 0
+Progress: resolved 442, reused 429, downloaded 0, added 0
+ WARN  5 deprecated subdependencies found: @humanwhocodes/config-array@0.13.0, @humanwhocodes/object-schema@2.0.3, glob@7.2.
+3, inflight@1.0.6, rimraf@3.0.2                                                                                             Pr
+ogress: resolved 442, reused 429, downloaded 0, added 0
+Already up to date
+Progress: resolved 442, reused 429, downloaded 0, added 0
+Progress: resolved 442, reused 429, downloaded 0, added 0, done
+Done in 6.1s
+
+```
 
 ---
 
