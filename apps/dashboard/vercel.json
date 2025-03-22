@@ -1,6 +1,5 @@
 {
   "framework": "nextjs",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "cd ../.. && pnpm run build:ci",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet ./apps/dashboard/"
+  "buildCommand": "cd ../.. && pnpm run build:ci"
 } 

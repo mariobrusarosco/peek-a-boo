@@ -5,12 +5,5 @@
   "github": {
     "silent": true,
     "autoJobCancelation": true
-  },
-  "git": {
-    "deploymentEnabled": {
-      "main": true,
-      "development": true,
-      "preview": true
-    }
   }
 } 
