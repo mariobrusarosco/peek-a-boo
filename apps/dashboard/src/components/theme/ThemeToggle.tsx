@@ -12,7 +12,7 @@ import {
 import { Moon, Sun, Monitor } from 'lucide-react';
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch by only rendering the toggle client-side

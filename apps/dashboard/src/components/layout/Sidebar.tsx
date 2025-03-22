@@ -8,7 +8,6 @@ import {
   Flag,
   Home,
   Settings,
-  User,
   Users,
   LineChart,
   Server,
