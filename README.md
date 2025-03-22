@@ -26,7 +26,7 @@ This is a monorepo containing:
 ### Prerequisites
 
 - Node.js v18+
-- npm v9+
+- pnpm v8+
 - Docker and Docker Compose
 
 ### Local Development
@@ -41,14 +41,14 @@ cd feature-flag-saas
 2. **Install dependencies**
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. **Start the development environment**
 
 ```bash
 docker-compose up -d
-npm run dev
+pnpm dev
 ```
 
 4. Open the dashboard at http://localhost:3000
@@ -56,12 +56,14 @@ npm run dev
 ## Documentation
 
 - [Development Environment Setup](/docs/dx/001-development-environment.md)
+- [UI Components & Shadcn UI](/docs/dx/002-ui-components.md)
 - [Architectural Decisions](/docs/decision/)
 - [Developer Experience Guides](/docs/dx/)
 
 ## Technology Stack
 
 - **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **UI Components**: Shadcn UI with Radix UI primitives
 - **Backend**: NestJS, TypeScript
 - **Database**: PostgreSQL with Prisma ORM
 - **Caching**: Redis
