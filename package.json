@@ -7,6 +7,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:ci": "turbo run build --filter=@peek-a-boo/dashboard...",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

@@ -1,4 +1,6 @@
 {
-  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm install autoprefixer postcss tailwindcss --save-exact && turbo run build --filter=@peek-a-boo/dashboard...",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm run build:ci",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet ./apps/dashboard/"
 } 
