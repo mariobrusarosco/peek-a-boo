@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet';
-import { Button } from '../../components/ui/button';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import Header from '@/components/layout/Header';
+import Sidebar from '@/components/layout/Sidebar';
 import { Menu } from 'lucide-react';
 
 interface DashboardLayoutProps {
