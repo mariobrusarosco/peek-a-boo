@@ -7,9 +7,11 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npx next build",
+    "build": "../../node_modules/.bin/next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:types": "tsc --noEmit",
+    "prebuild": "npm run lint:types",
     "test": "jest"
   },
   "dependencies": {
