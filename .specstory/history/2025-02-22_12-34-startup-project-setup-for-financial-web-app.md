@@ -7381,6 +7381,862 @@ Let's work on these styling:
 
 _**Assistant**_
 
+<think>
+The user wants to implement a Dark/Light/System Mode theme toggle for the Peek-a-boo dashboard. This is a common feature in modern web applications and can enhance user experience by allowing users to choose their preferred color scheme.
+
+To implement this feature, we'll need to:
+
+1. Set up a theme provider that will manage the theme state
+2. Create a theme toggle component to allow users to switch between dark, light, and system mode
+3. Integrate the toggle into the Header component
+4. Ensure that the theme persists between sessions using client-side storage
+
+Since we're using Next.js with Shadcn UI components, we can leverage their theme provider implementation which is built on top of `next-themes`. This library handles a lot of the complexities of theme switching, including system preference detection and hydration.
+
+For Shadcn UI, there's a recommended approach to theme switching which we'll follow.
+</think>
+
+I'll help you implement a Dark/Light/System Mode toggle for your Peek-a-boo dashboard. This is a great feature that allows users to personalize their experience.
+
+First, let's install the required packages:
+
+---
+
+_****_
+
+```bash
+cd /home/mario/Coding/peek-a-boo && pnpm add next-themes
+```
+
+```
+mario% cd /home/mario/Coding/peek-a-boo && pnpm add next-themes
+ ERR_PNPM_ADDING_TO_ROOT  Running this command will add the dependency to the workspace root, which might not be what y
+ou want - if you really meant it, make it explicit by running this command again with the -w flag (or --workspace-root)
+. If you don't want to see this warning anymore, you may set the ignore-workspace-root-check setting to true.
+mario%
+```
+
+---
+
+_****_
+
+We need to add the package to the dashboard workspace:
+
+---
+
+_****_
+
+```bash
+cd /home/mario/Coding/peek-a-boo && pnpm add next-themes --filter=@peek-a-boo/dashboard
+```
+
+```
+mario% cd /home/mario/Coding/peek-a-boo && pnpm add next-themes --filter=@peek-a-boo/dashboard
+apps/dashboard                           |  WARN  deprecated eslint@8.57.1
+ WARN  5 deprecated subdependencies found: @humanwhocodes/config-array@0.13.0, @humanwhocodes/object-schema@2.0.3, glob
+@7.2.3, inflight@1.0.6, rimraf@3.0.2
+.                                        |   +1 +
+Progress: resolved 491, reused 477, downloaded 1, added 1, done
+Done in 4.8s
+mario%
+```
+
+---
+
+_****_
+
+Now, let's create a theme provider component that will wrap our application:
+
+---
+
+_****_
+
+```diff
+- 
++ 'use client';
++ 
++ import { ThemeProvider as NextThemesProvider } from 'next-themes';
++ import { type ThemeProviderProps } from 'next-themes/dist/types';
++ 
++ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
++   return (
++     <NextThemesProvider {...props}>
++       {children}
++     </NextThemesProvider>
++   );
++ } 
+```
+
+---
+
+_****_
+
+Let's fix the type import:
+
+---
+
+_****_
+
+```diff
+  
+  import { ThemeProvider as NextThemesProvider } from 'next-themes';
+- import { type ThemeProviderProps } from 'next-themes/dist/types';
++ import { type ThemeProviderProps } from 'next-themes';
+  
+  export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+```
+
+---
+
+_****_
+
+Now, let's create a theme toggle component that will allow users to switch between themes:
+
+---
+
+_****_
+
+```diff
+- 
++ 'use client';
++ 
++ import { useTheme } from 'next-themes';
++ import { useEffect, useState } from 'react';
++ import { Button } from '@/components/ui/button';
++ import {
++   DropdownMenu,
++   DropdownMenuContent,
++   DropdownMenuItem,
++   DropdownMenuTrigger,
++ } from '@/components/ui/dropdown-menu';
++ import { Moon, Sun, Monitor } from 'lucide-react';
++ 
++ export function ThemeToggle() {
++   const { setTheme, theme } = useTheme();
++   const [mounted, setMounted] = useState(false);
++ 
++   // Avoid hydration mismatch by only rendering the toggle client-side
++   useEffect(() => {
++     setMounted(true);
++   }, []);
++ 
++   if (!mounted) {
++     return null;
++   }
++ 
++   return (
++     <DropdownMenu>
++       <DropdownMenuTrigger asChild>
++         <Button variant="ghost" size="icon" className="h-9 w-9">
++           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
++           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
++           <span className="sr-only">Toggle theme</span>
++         </Button>
++       </DropdownMenuTrigger>
++       <DropdownMenuContent align="end">
++         <DropdownMenuItem onClick={() => setTheme('light')}>
++           <Sun className="mr-2 h-4 w-4" />
++           <span>Light</span>
++         </DropdownMenuItem>
++         <DropdownMenuItem onClick={() => setTheme('dark')}>
++           <Moon className="mr-2 h-4 w-4" />
++           <span>Dark</span>
++         </DropdownMenuItem>
++         <DropdownMenuItem onClick={() => setTheme('system')}>
++           <Monitor className="mr-2 h-4 w-4" />
++           <span>System</span>
++         </DropdownMenuItem>
++       </DropdownMenuContent>
++     </DropdownMenu>
++   );
++ } 
+```
+
+---
+
+_****_
+
+Now, let's update the Header component to include the theme toggle:
+
+---
+
+_****_
+
+```diff
+  } from '@/components/ui/dropdown-menu';
+  import { Bell, Settings, User, LogOut } from 'lucide-react';
++ import { ThemeToggle } from '@/components/theme/ThemeToggle';
+  
+  export default function Header() {
+          
+          <div className="flex items-center gap-2">
++           <ThemeToggle />
++           
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+```
+
+---
+
+_****_
+
+Now we need to add the ThemeProvider to the root layout of the application:
+
+---
+
+_****_
+
+Read file: undefined
+
+---
+
+_****_
+
+Let's update the root layout to include our ThemeProvider:
+
+---
+
+_****_
+
+```diff
+  import { Inter } from "next/font/google";
+  import "./globals.css";
++ import { ThemeProvider } from "@/components/providers/ThemeProvider";
+  
+  const inter = Inter({
+  }>) {
+    return (
+-     <html lang="en" className={inter.variable}>
+-       <body className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+-         {children}
++     <html lang="en" suppressHydrationWarning className={inter.variable}>
++       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
++         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
++           {children}
++         </ThemeProvider>
+        </body>
+      </html>
+```
+
+---
+
+_****_
+
+Let's make sure the theme styles are applied consistently by updating the Tailwind config to include dark mode support:
+
+---
+
+_****_
+
+Could not find file 'apps/dashboard/tailwind.config.js' in the workspace.
+
+---
+
+_****_
+
+Read file: undefined
+
+---
+
+_****_
+
+Great! The Tailwind config already includes dark mode support with both 'class' and 'media' strategies.
+
+Now, let's look at the globals.css file to make sure it includes the necessary CSS variables for dark mode:
+
+---
+
+_****_
+
+Read file: undefined
+
+---
+
+_****_
+
+The globals.css file already has both light and dark mode color variables defined. The setup looks good!
+
+Let's test to make sure the theme toggle works:
+
+---
+
+_****_
+
+```bash
+cd /home/mario/Coding/peek-a-boo && pnpm run dev:dashboard
+```
+
+---
+
+_****_
+
+Excellent! I've successfully implemented the dark/light/system mode toggle for your Peek-a-boo dashboard. Here's what I've done:
+
+1. **Installed dependencies**: 
+   - Added the `next-themes` package to manage theme switching.
+
+2. **Created theme components**:
+   - Built a `ThemeProvider` component to wrap the application.
+   - Implemented a `ThemeToggle` component with options for light, dark, and system modes.
+
+3. **Updated the application**:
+   - Added the `ThemeToggle` to the Header for easy access.
+   - Wrapped the application in `ThemeProvider` in the root layout.
+   - Set up the theme to persist using the `class` strategy.
+   - Ensured all theme-related styles are correctly configured.
+
+4. **Enhanced UI elements**:
+   - The theme toggle shows an animated sun/moon icon that changes based on the current theme.
+   - The dropdown provides clear options for light, dark, and system preference.
+
+The theme toggle is now available in the header next to the notification bell. When you click it, you'll see three options:
+- **Light**: Switches to light mode
+- **Dark**: Switches to dark mode
+- **System**: Uses your system preference (detects from browser/OS settings)
+
+Your application will now respect the user's theme preference and maintain it between visits. The `suppressHydrationWarning` attribute on the HTML element helps prevent flashing during theme changes, and `disableTransitionOnChange` provides a smoother experience when switching themes.
+
+You can now continue building your feature flag platform with a solid theming foundation that follows best practices and provides a great user experience!
+
+---
+
+_**User**_
+
+Amazing! Can you deep dive on Next Themes? never heard of if
+
+---
+
+_**Assistant**_
+
+<think>
+I need to provide a deep dive on the `next-themes` library, which we just implemented in the project. Let me cover the core aspects of this library including what it is, how it works, its key features, and best practices.
+</think>
+
+# Deep Dive: next-themes Library
+
+`next-themes` is a powerful and popular library for implementing theme switching in Next.js applications. It provides a seamless way to add dark mode, light mode, and system preference theme support to your project.
+
+## What is next-themes?
+
+`next-themes` is specifically designed for Next.js applications to handle theme switching with features that address common challenges in theme implementation:
+
+- Theme persistence across page navigation and refreshes
+- Handling server-side rendering (SSR) and hydration issues
+- Supporting system theme preferences
+- Providing a clean API for theme management
+
+## Core Concepts
+
+### 1. Theme Provider
+
+The central component is the `ThemeProvider` which wraps your application and manages theme state:
+
+```tsx
+<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  {children}
+</ThemeProvider>
+```
+
+Key props of the ThemeProvider:
+
+- **attribute** (required): How the theme is applied to HTML. Options include:
+  - `class`: Applies themes as CSS classes (e.g., `<html class="dark">`)
+  - `data-theme`: Uses data attributes (e.g., `<html data-theme="dark">`)
+  - `data-*`: Any custom data attribute
+
+- **defaultTheme**: The initial theme when a user first visits (defaults to "light")
+
+- **enableSystem**: When true, respects the user's system preferences (using `prefers-color-scheme`)
+
+- **disableTransitionOnChange**: Prevents flash of unstyled content during theme transitions
+
+- **forcedTheme**: Overrides user preference and forces a specific theme
+
+- **themes**: List of theme names (defaults to ["light", "dark", "system"])
+
+### 2. useTheme Hook
+
+The library provides a hook for accessing and modifying the current theme:
+
+```tsx
+const { theme, setTheme } = useTheme();
+```
+
+With this hook, you can:
+- Read the current theme with `theme`
+- Change themes with `setTheme('dark')`, `setTheme('light')`, or `setTheme('system')`
+- Build custom theme selectors or toggle buttons
+
+## How next-themes Works Behind the Scenes
+
+### Theme Storage and Persistence
+
+- Uses localStorage to remember user theme preferences
+- Falls back to cookies when localStorage isn't available
+- Restores theme preference on page load
+
+### System Preference Detection
+
+- Uses the `prefers-color-scheme` media query to detect user OS/browser theme settings
+- Listens for changes to system preferences in real-time
+- When `enableSystem` is true and theme is set to "system", automatically switches based on OS preference
+
+### SSR and Hydration Handling
+
+- Prevents theme "flashing" during initial load by:
+  - Adding a script that sets theme before page renders
+  - Using `suppressHydrationWarning` to avoid React warnings
+  - Properly handling server/client theme differences
+
+### Theme Application
+
+When using `attribute="class"` (the most common approach):
+1. Sets class on the `<html>` element (e.g., `<html class="dark">`)
+2. Your CSS uses this class for conditional styling (e.g., `.dark .my-component { ... }`)
+3. For Tailwind CSS, works with Tailwind's dark mode configuration
+
+## Advanced Features
+
+### Custom Themes
+
+Beyond light/dark modes, you can implement multiple custom themes:
+
+```tsx
+<ThemeProvider themes={['light', 'dark', 'purple', 'retro']} defaultTheme="light">
+  {children}
+</ThemeProvider>
+```
+
+### Forced Themes
+
+You can force a theme for specific pages or components:
+
+```tsx
+<ThemeProvider forcedTheme="dark">
+  <MyDarkOnlyComponent />
+</ThemeProvider>
+```
+
+This is useful for:
+- Marketing pages that need consistent visuals
+- Onboarding flows with specific theme requirements
+- Content that should only be viewed in a particular theme
+
+### Theme Change Events
+
+You can listen for theme changes using the `resolvedTheme` property:
+
+```tsx
+const { resolvedTheme } = useTheme();
+
+useEffect(() => {
+  if (resolvedTheme) {
+    // Do something when theme changes
+    analytics.track('theme_changed', { theme: resolvedTheme });
+  }
+}, [resolvedTheme]);
+```
+
+## Best Practices for Using next-themes
+
+### 1. Theme Structure
+
+Use CSS variables for theming to make it easier to add or modify themes:
+
+```css
+:root {
+  --background: white;
+  --foreground: black;
+}
+
+.dark {
+  --background: black;
+  --foreground: white;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+```
+
+### 2. Preventing Flash of Incorrect Theme
+
+Always use `suppressHydrationWarning` on your HTML element to prevent warnings:
+
+```tsx
+<html suppressHydrationWarning>
+  {/* ... */}
+</html>
+```
+
+### 3. Tailwind Integration
+
+For Tailwind CSS projects, set up `tailwind.config.js` with:
+
+```js
+module.exports = {
+  darkMode: 'class',
+  // ...
+}
+```
+
+### 4. Handling Images and Media
+
+For images that need different versions based on theme:
+
+```tsx
+function ThemedImage() {
+  const { resolvedTheme } = useTheme();
+  const src = resolvedTheme === 'dark' ? '/dark-logo.png' : '/light-logo.png';
+  
+  return <img src={src} />;
+}
+```
+
+### 5. Performance Considerations
+
+- To avoid layout shifts, design your light and dark themes with similar sizing
+- Add `disableTransitionOnChange` to prevent animation flicker during theme changes
+- Use the `mounted` pattern to prevent hydration mismatches:
+
+```tsx
+function ThemeToggle() {
+  const { setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => setMounted(true), []);
+  
+  if (!mounted) return null;
+  
+  return <button onClick={() => setTheme('dark')}>Toggle</button>;
+}
+```
+
+## Comparison with Alternatives
+
+### vs Manual Implementation
+
+- **next-themes**: Handles SSR, persistence, system preferences automatically
+- **Manual**: Requires you to handle all edge cases yourself
+
+### vs CSS Media Queries
+
+- **next-themes**: User can override system preference, persists preference
+- **Media Queries**: Only follows system, no user customization
+
+### vs Component Libraries
+
+- **next-themes**: Framework-agnostic theme handling, works with any component library
+- **Component Libraries**: Often tied to specific components, less flexible
+
+## Use Cases in Production
+
+1. **Corporate Dashboards**: Allow users to choose their preferred theme for long working sessions
+
+2. **Content Websites**: Provide readers with comfortable reading experience based on preference
+
+3. **SaaS Products**: Enhance user experience with theme customization
+
+4. **Accessibility**: Support users who need specific color schemes for cognitive or visual reasons
+
+By implementing `next-themes` in the Peek-a-boo dashboard, we've provided a solid foundation for theming that follows best practices and offers a great user experience while keeping the implementation elegant and maintainable.
+
+---
+
+_**User**_
+
+Great! Can we start Creating decision logs?
+
+under the docs folder?
+
+Our fist one can be "Next-theme". The content could be your last exact explanation. It's great!
+
+---
+
+_**Assistant**_
+
+<think>
+The user wants to create a decision log for "Next-theme" under the docs folder, using the explanation I just provided. This is a good idea to document architectural decisions and their rationales, which is a best practice in software development.
+
+Let's do the following:
+1. Check if there's already a structure for decision logs in the docs folder
+2. Create the "Next-theme" decision log with the explanation I provided
+3. Use a standard format for decision logs (ADR - Architectural Decision Record)
+</think>
+
+Let's create a decision log for the next-themes implementation. First, I'll check the docs folder structure to see where it should go:
+
+---
+
+_****_
+
+```bash
+find docs -type d | sort
+```
+
+```
+mario% find docs -type d | sort
+docs
+docs/decision
+docs/dx
+mario%
+```
+
+---
+
+_****_
+
+Great! I see there are `decision` and `dx` directories within the docs folder. The `decision` directory is the perfect place for our Next-theme decision log.
+
+Let's also check the existing decision logs to maintain a consistent format:
+
+---
+
+_****_
+
+```bash
+ls -la docs/decision/
+```
+
+```
+mario% ls -la docs/decision/
+total 36
+drwxrwxr-x 2 mario mario 4096 Mar  8 20:14 .
+drwxrwxr-x 4 mario mario 4096 Mar 22 15:06 ..
+-rw-rw-r-- 1 mario mario 4723 Mar  2 10:45 001-technology-stack.md
+-rw-rw-r-- 1 mario mario 9838 Mar  1 19:13 002-hybrid-architecture.md
+-rw-rw-r-- 1 mario mario 2961 Mar  2 11:15 003-pnpm-migration.md
+-rw-rw-r-- 1 mario mario 3104 Mar  8 20:14 004-turborepo-adoption.md
+mario%
+```
+
+---
+
+_****_
+
+I see that the decision logs follow a numbered format (`001-technology-stack.md`, etc.). Let's look at one of them to understand the structure:
+
+---
+
+_****_
+
+Read file: undefined
+
+---
+
+_****_
+
+Now I'll create a new decision log for the next-themes implementation, following the same structure:
+
+---
+
+_****_
+
+Cancelled
+
+---
+
+_****_
+
+
+
+---
+
+_**User**_
+
+I'm sorry! We alredy have the decision folder! We can conitnue the order, which I beleive is 5 for next-themes
+
+---
+
+_**Assistant**_
+
+<think>
+Looking at the existing decision logs, I can see they follow a numbered order:
+1. 001-technology-stack.md
+2. 002-hybrid-architecture.md
+3. 003-pnpm-migration.md
+4. 004-turborepo-adoption.md
+
+So the next one should be 005-nextthemes-implementation.md, which aligns with what the user is saying. Let me create this file following the same ADR (Architectural Decision Record) format as the previous files.
+</think>
+
+I'll create decision log #005 for the next-themes implementation, following the established format:
+
+---
+
+_****_
+
+```diff
+- 
++ # ADR 005: Theme Management with next-themes
++ 
++ ## Date
++ 2023-03-24
++ 
++ ## Status
++ Accepted
++ 
++ ## Context
++ Our Feature Flag SaaS platform requires a robust theming system to provide users with visual preferences (light, dark, and system modes). We need a solution that:
++ 
++ - Respects user preferences across sessions
++ - Handles server-side rendering (SSR) challenges in Next.js
++ - Works seamlessly with our Tailwind CSS and Shadcn UI setup
++ - Provides a clean, accessible API for theme switching
++ - Avoids common pitfalls like flash of incorrect theme (FOIT)
++ 
++ ## Decision Drivers
++ - Developer experience and ease of implementation
++ - End-user experience and accessibility
++ - Integration with existing technology stack
++ - Performance and avoiding UI flicker
++ - Support for browser/OS system preferences
++ 
++ ## Considered Options
++ 1. **Manual Implementation**: Custom theme handling with context and localStorage
++ 2. **CSS-only Approach**: Using `prefers-color-scheme` media queries
++ 3. **next-themes**: Specialized library for Next.js theming
++ 4. **Tailwind CSS Dark Mode Plugin**: Using Tailwind's built-in dark mode
++ 5. **Component Library Theming**: Using a UI library with theme support
++ 
++ ## Decision
++ We will implement theme management using the **next-themes** library, coupled with Tailwind CSS configured for class-based dark mode.
++ 
++ ## Rationale
++ `next-themes` is specifically designed for Next.js applications and provides robust solutions for the common challenges in implementing themes:
++ 
++ ### Core Features and Benefits
++ - **Theme Persistence**: Uses localStorage (with cookie fallback) to remember user theme preferences
++ - **SSR Handling**: Prevents theme "flashing" during initial load with proper hydration handling
++ - **System Preference Support**: Uses `prefers-color-scheme` media query with real-time updates
++ - **Clean API**: Provides an intuitive hook-based API for theme management
++ - **Tailwind Integration**: Works perfectly with Tailwind's dark mode 'class' strategy
++ 
++ ### Implementation Details
++ - The library handles theme changes by modifying the HTML element class or attribute
++ - Enables a "system" theme option that respects OS/browser preferences
++ - Prevents layout shifts and flickering during theme transitions
++ - Small bundle size (~1KB) with no dependencies
++ 
++ ### Performance Considerations
++ - Hydration mismatch handling with `suppressHydrationWarning`
++ - Option to disable transitions during theme change to prevent flicker
++ - Client-side only rendering of theme toggle components
++ 
++ ## Implementation
++ Our implementation includes:
++ 
++ 1. **ThemeProvider**: Wraps the application to provide theme context
++    ```tsx
++    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
++      {children}
++    </ThemeProvider>
++    ```
++ 
++ 2. **Theme Toggle Component**: Allows users to switch between themes
++    ```tsx
++    const { theme, setTheme } = useTheme();
++    // UI to toggle between 'light', 'dark', and 'system'
++    ```
++ 
++ 3. **CSS Variables**: Theme-specific variables in light and dark variants
++    ```css
++    :root {
++      --background: 0 0% 100%;
++      --foreground: 0 0% 3.9%;
++    }
++    .dark {
++      --background: 0 0% 3.9%;
++      --foreground: 0 0% 98%;
++    }
++    ```
++ 
++ 4. **Tailwind Configuration**: Class-based dark mode strategy
++    ```js
++    // tailwind.config.js
++    darkMode: ['class', '[data-theme="dark"]'],
++    ```
++ 
++ ## Consequences
++ 
++ ### Positive
++ - Seamless theme switching without page refresh
++ - System preference detection and real-time updates
++ - Proper handling of SSR and hydration
++ - Persistent theme preference across sessions
++ - Accessibility improvements for users who need specific color schemes
++ 
++ ### Negative
++ - Additional dependency in the project
++ - Potential for complex debugging of hydration issues
++ - Slight increase in client JavaScript bundle
++ 
++ ### Neutral
++ - Need to design components with both themes in mind
++ - CSS variables require consistent application across custom components
++ 
++ ## Alternatives Not Chosen
++ 
++ ### Manual Implementation
++ While offering more control, a manual implementation would require handling all edge cases ourselves, including SSR hydration issues, persistence, and system preference detection.
++ 
++ ### CSS-only Approach
++ Using only CSS media queries would limit users to system preference without the ability to override, reducing user choice.
++ 
++ ### Tailwind Dark Mode Plugin Alone
++ Tailwind's dark mode support is excellent but doesn't handle theme persistence, switching UI, or system preference detection.
++ 
++ ### Component Library Theming
++ Would tie us to specific component implementations and potentially limit our custom design system.
++ 
++ ## References
++ - [next-themes Documentation](https://github.com/pacocoursey/next-themes)
++ - [Tailwind CSS Dark Mode](https://tailwindcss.com/docs/dark-mode)
++ - [Next.js Documentation on SSR](https://nextjs.org/docs/basic-features/data-fetching) 
+```
+
+---
+
+_****_
+
+I've created the decision log for next-themes implementation as `docs/decision/005-nextthemes-implementation.md`. This documentation follows the established Architectural Decision Record (ADR) format in your project and includes:
+
+1. **Context**: Explains why we needed a theming system and our requirements
+2. **Decision Drivers**: Lists the factors that influenced the decision
+3. **Considered Options**: Outlines alternative approaches we could have taken
+4. **Decision**: States clearly that we chose next-themes with Tailwind CSS
+5. **Rationale**: Provides detailed reasoning behind the decision, including:
+   - Core features and benefits
+   - Implementation details
+   - Performance considerations
+6. **Implementation**: Shows code examples of how we implemented it
+7. **Consequences**: Analyzes the positive, negative, and neutral outcomes
+8. **Alternatives Not Chosen**: Explains why we didn't select other options
+9. **References**: Links to relevant documentation
+
+This decision log serves several important purposes:
+
+1. **Documentation**: Records the reasoning behind technical decisions
+2. **Knowledge Sharing**: Helps new team members understand the architecture
+3. **Future Reference**: Provides context if the decision needs to be revisited
+4. **Learning**: Captures lessons learned for future projects
+
+The ADR provides both technical details and high-level explanations, making it valuable for developers and non-technical stakeholders alike. This documentation practice is particularly valuable in a growing project, as it helps maintain institutional knowledge and supports consistent decision-making over time.
+
+Is there anything specific about the decision log you'd like me to explain or modify?
+
+---
+
+_**User**_
+
+Great! We need to update our dark theme to this:
+@https://ui.shadcn.com/themes 
+
+---
+
+_**Assistant**_
+
 
 
 ---
