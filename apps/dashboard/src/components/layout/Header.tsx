@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Bell, Settings, User, LogOut } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -37,6 +38,8 @@ export default function Header() {
         </div>
         
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+          
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
