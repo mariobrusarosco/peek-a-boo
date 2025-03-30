@@ -9367,7 +9367,7 @@ There's an issue with the git diff command syntax in the ignoreCommand. Let's fi
 
 _****_
 
-
+Cancelled
 
 ---
 
@@ -10127,13 +10127,249 @@ Now let's update the root package.json to add a convenient way to run this check
 
 _****_
 
-
+```diff
+      "dev": "turbo run dev",
+      "lint": "turbo run lint",
++     "lint:types": "turbo run lint:types",
+      "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+      "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
+```
 
 ---
 
 _****_
 
+Let's also add this new lint task to turbo.json:
 
+---
+
+_****_
+
+```diff
+        "persistent": true
+      },
+-     "lint": {}
++     "lint": {},
++     "lint:types": {}
+    }
+  } 
+```
+
+---
+
+_****_
+
+Great! I've made several important changes to help you run the same lint checks locally that Vercel uses during deployment:
+
+1. **Fixed the root issue**: Updated `darkMode: ['media', 'class']` to `darkMode: 'class'` in your Tailwind config to match TypeScript's expectations and your next-themes implementation.
+
+2. **Added TypeScript checking script**: Added a `lint:types` command that runs TypeScript's type checker without emitting files, which is what Vercel does during build.
+
+3. **Added prebuild hook**: Now your local build will automatically run type checking first, just like Vercel does.
+
+4. **Added Turborepo configuration**: Set up Turborepo to recognize the new `lint:types` task.
+
+Now you can easily run the same type checking that Vercel does by running:
+
+```bash
+pnpm lint:types
+```
+
+This will catch type errors like the one you encountered before you try to deploy, saving you time and frustration. The change I made to the Tailwind config should fix your immediate deployment issue as well.
+
+---
+
+_**User**_
+
+It working now! 
+
+Can we do a Post Mortem? How to prevent this from happening
+
+---
+
+_**Assistant**_
+
+<think>
+Let's do a post-mortem on the issue and identify ways to prevent similar problems in the future. The main issues were:
+
+1. A discrepancy between local development environment and the Vercel build process - specifically, the TypeScript type checking being stricter in the Vercel environment caught a type error that wasn't being caught locally.
+
+2. The specific issue was in the Tailwind configuration - using an array for `darkMode` wasn't compatible with the TypeScript type definitions, even though it might work at runtime.
+
+3. The error message appeared during the build process in Vercel, but wasn't being caught in local development.
+
+Let's outline some preventative measures:
+</think>
+
+# Post-Mortem: TypeScript Configuration Mismatch Between Local and CI
+
+## What Happened
+
+You encountered a deployment failure in Vercel with a TypeScript error that wasn't being caught in your local environment:
+
+```
+Type error: Type '"media"' is not assignable to type '"class"'.
+```
+
+The issue was that your Tailwind configuration had `darkMode: ['media', 'class']`, which was valid in runtime but didn't match TypeScript's type definitions that expected just `'class'`.
+
+## Root Causes
+
+1. **Type Checking Inconsistency**: Vercel's build process runs strict type checking while your local workflow didn't perform the same checks before deployment.
+
+2. **Configuration Format Mismatch**: Using an array format for `darkMode` that's supported by Tailwind runtime but not by its TypeScript definitions.
+
+3. **Lack of Pre-deployment Verification**: No automated process to ensure type compatibility before pushing code.
+
+## Preventative Measures
+
+### 1. Standardize Type Checking Across Environments
+
+We've already implemented several fixes to address this:
+
+- Added a `lint:types` script that runs TypeScript's type checker in the same
+
+---
+
+_**User**_
+
+No, I mean the common deploy issues. Specially the PNPM + turbo repo issues
+
+---
+
+_**Assistant**_
+
+<think>
+I see, the user wants a post-mortem about the broader patterns of deployment issues with PNPM and Turborepo, not just the specific TypeScript error. Let me analyze some of the recurring problems they've been facing:
+
+1. Module resolution issues (Next.js binary not found)
+2. Hoisting problems with PNPM's strict module structure
+3. Lock file inconsistencies 
+4. Turborepo configuration changes (pipeline → tasks)
+5. Type checking discrepancies
+
+Based on the conversation history, there have been several changes made to address these issues:
+- Adding Next.js as a root dependency
+- Configuring .npmrc with proper hoisting settings
+- Updating direct paths to binaries
+- Changing Vercel build commands
+- Updating Turborepo configuration
+
+I'll create a comprehensive post-mortem focusing on PNPM + Turborepo deployment issues and how to prevent them.
+</think>
+
+# Post-Mortem: PNPM + Turborepo Deployment Issues
+
+## Common Issues We've Encountered
+
+1. **Module Resolution Problems**
+   - Next.js binary not found during build (`/vercel/path0/apps/dashboard/node_modules/next/dist/bin/next`)
+   - Missing dependencies due to PNPM's strict module structure
+   - Inconsistent paths between local and CI environments
+
+2. **Turborepo Configuration Mismatches**
+   - The transition from `pipeline` to `tasks` in Turborepo 2.0+
+   - Build cache inconsistencies between environments
+
+3. **Lock File Conflicts**
+   - Frozen lockfile issues preventing dependency updates
+   - Version mismatches between local and CI
+
+4. **TypeScript/Linting Differences**
+   - Type errors appearing only during deployment
+   - Different TypeScript/ESLint configurations in different environments
+
+## Root Causes
+
+### 1. PNPM's Strict Module Structure
+
+PNPM uses a unique node_modules structure with symbolic links to improve disk space usage and prevent phantom dependencies. This causes issues with tools that expect the flatter structure of npm/yarn.
+
+### 2. Turborepo's Evolving API
+
+Turborepo has undergone significant changes (like pipeline → tasks), making older configurations incompatible with newer versions.
+
+### 3. CI Environment Differences
+
+Vercel's build environment has different path structures and validation processes compared to local environments.
+
+## Preventative Measures
+
+### 1. Standardize PNPM Configuration
+
+```
+# .npmrc best practices for monorepos
+node-linker=hoisted       # Flatter dependency structure
+shamefully-hoist=true     # Force hoisting of all dependencies 
+public-hoist-pattern[]=*  # Hoist all packages
+```
+
+### 2. Use Explicit Binary Paths
+
+```json
+// In package.json
+"build": "../../node_modules/.bin/next build"  // Explicit path to binary
+```
+
+### 3. Add Root Dependencies for Key Tools
+
+```json
+// Root package.json
+"dependencies": {
+  "next": "^14.0.0"  // Add critical tools to root
+}
+```
+
+### 4. Implement Pre-deployment Checks
+
+```json
+// Add scripts that mirror CI environment
+"lint:ci": "tsc --noEmit && next lint",
+"prebuild": "npm run lint:ci"
+```
+
+### 5. Consistent Vercel Configuration
+
+```json
+// vercel.json
+{
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm run build:ci"
+}
+```
+
+### 6. CI Dry Run Locally
+
+Create a script that simulates CI environment:
+
+```bash
+#!/bin/bash
+# ci-test.sh
+pnpm install --no-frozen-lockfile
+pnpm run lint:types
+pnpm run build:ci
+```
+
+## Prevention Checklist for Future Changes
+
+Before deploying, ensure:
+
+1. ✅ All executables are properly hoisted or explicitly pathed
+2. ✅ The `.npmrc` file has the necessary hoisting patterns
+3. ✅ Critical dependencies exist in the root package.json
+4. ✅ You've run the same checks locally that CI will run
+5. ✅ Turborepo configuration is up-to-date with the latest API
+6. ✅ No frozen lockfile is used during deployment
+
+## Monitoring and Early Detection
+
+1. **Add GitHub Action**: Create a workflow that mirrors Vercel's build process to catch issues before deployment
+
+2. **Create Integration Tests**: Test the build process in a simulated CI environment
+
+3. **Document Common Issues**: Maintain a troubleshooting guide for the team with past solutions
+
+By implementing these measures, we can significantly reduce deployment issues with PNPM and Turborepo configurations.
 
 ---
 

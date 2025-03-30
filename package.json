@@ -13,6 +13,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
   },
+  "dependencies": {
+    "next": "^14.0.0"
+  },
   "devDependencies": {
     "turbo": "^2.1.0",
     "prettier": "^3.2.5"
