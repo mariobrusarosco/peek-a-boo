@@ -1,14 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm run build:ci",
+  "buildCommand": "cd apps/dashboard && pnpm run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
+  "outputDirectory": "apps/dashboard/.next",
   "github": {
     "silent": true,
-    "autoJobCancelation": true
+    "autoJobCancellation": true
   },
   "git": {
     "deploymentEnabled": {
       "main": true
     }
   }
-} 
+}
