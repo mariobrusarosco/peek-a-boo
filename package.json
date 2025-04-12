@@ -16,7 +16,8 @@
     "build:sdk-service": "turbo run build --filter=@peek-a-boo/sdk-service",
     "deploy:dashboard": "cd apps/dashboard && vercel deploy --prod",
     "deploy:sdk-service": "cd apps/sdk-service && railway up",
-    "prisma:migrate:deploy": "pnpm run prisma:migrate:deploy --workspace=packages/shared"
+    "prisma:migrate:deploy": "pnpm run prisma:migrate:deploy --workspace=packages/shared",
+    "setup:env": "./scripts/setup-env.sh"
   },
   "dependencies": {
     "next": "^14.0.0"
