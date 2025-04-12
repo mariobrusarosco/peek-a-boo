@@ -8,13 +8,15 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export const prisma = globalThis.prisma || new PrismaClient();
+export const prisma = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
-  globalThis.prisma = prisma;
+  global.prisma = prisma;
 }
 
-// Export helper types for usage throughout the application
+// Export types and interfaces for the feature flag system
+
+// Flag context used for targeting
 export interface FlagContext {
   userId?: string;
   sessionId?: string;
@@ -27,6 +29,7 @@ export interface FlagContext {
   [key: string]: any;
 }
 
+// Response from flag evaluation
 export interface FlagEvaluationResponse {
   key: string;
   enabled: boolean;
@@ -40,7 +43,7 @@ export interface FlagEvaluationResponse {
   ruleId?: string;
 }
 
-// Types for SDK initialization
+// SDK initialization options
 export interface SDKOptions {
   apiKey: string;
   environmentKey: string;
@@ -50,7 +53,7 @@ export interface SDKOptions {
   defaultFlagValues?: Record<string, any>;
 }
 
-// Types for API responses
+// API response wrapper
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;

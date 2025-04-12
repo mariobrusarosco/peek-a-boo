@@ -1,21 +1,15 @@
 # Development Environment Setup
 
-This guide will help you set up your local development environment for the Feature Flag SaaS platform.
+This guide will help you set up your local development environment for the Peek-a-boo feature flag platform, avoiding common issues with workspace dependencies.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
 - **Node.js** (v18 or later)
-- **PNPM** (v8 or later)
+- **pnpm** (v8 or later)
 - **Docker** and **Docker Compose** (for local database and services)
 - **Git**
-
-If you don't have PNPM installed, you can install it with:
-
-```bash
-npm install -g pnpm
-```
 
 ## Repository Structure
 
@@ -33,235 +27,177 @@ Both are contained within this monorepo structure:
 │   └── sdk-service/     # NestJS application
 ├── packages/
 │   ├── shared/          # Shared code between applications
-│   └── client-sdk/      # The JavaScript SDK for clients
+│   └── client-sdk/      # The JavaScript SDK for clients (coming soon)
 ├── docs/
 │   ├── decision/        # Architectural Decision Records
 │   └── dx/              # Developer Experience guides
+├── planning/            # Project planning documents
 ├── docker-compose.yml   # Local development services
-├── pnpm-workspace.yaml  # PNPM workspace configuration
 └── package.json         # Root package.json for workspaces
 ```
 
 ## Initial Setup
 
-1. **Clone the repository**
+### 1. Clone the Repository
 
 ```bash
 git clone [repository-url]
-cd feature-flag-saas
+cd peek-a-boo
 ```
 
-2. **Install dependencies**
+### 2. Important: Setup the Shared Package First
+
+The most common issue when setting up this project is the dependency on the shared package. Since other packages depend on `@peek-a-boo/shared`, we need to set it up first:
+
+```bash
+# Create .env file for the shared package
+cp packages/shared/.env.example packages/shared/.env
+
+# Install dependencies for the shared package only
+pnpm --filter @peek-a-boo/shared install
+
+# Build the shared package
+pnpm --filter @peek-a-boo/shared build
+```
+
+### 3. Install All Dependencies
+
+Now that the shared package is built, you can install all dependencies:
 
 ```bash
 pnpm install
 ```
 
-3. **Set up environment variables**
+> **Troubleshooting**: If you see errors like `ERR_PNPM_FETCH_404 GET https://registry.npmjs.org/@peek-a-boo%2Fshared: Not Found - 404`, it means you need to build the shared package first as described in step 2.
 
-Copy the example environment files:
+### 4. Start the Development Database
 
 ```bash
+docker-compose up -d
+```
+
+This will start PostgreSQL and Redis containers.
+
+### 5. Initialize the Database
+
+```bash
+# Create tables and run migrations
+pnpm run prisma:migrate:dev --workspace=packages/shared
+```
+
+### 6. Configure Application Environment Variables
+
+```bash
+# Dashboard
 cp apps/dashboard/.env.example apps/dashboard/.env.local
+
+# SDK Service
 cp apps/sdk-service/.env.example apps/sdk-service/.env
-```
-
-Edit the environment files with your local settings.
-
-4. **Start the development database**
-
-```bash
-docker-compose up -d postgres
-```
-
-5. **Run database migrations**
-
-```bash
-pnpm run db:migrate
 ```
 
 ## Running the Applications
 
-### Dashboard (Next.js)
+### Start Both Applications
 
 ```bash
 # From the root directory
-pnpm run dev:dashboard
-
-# Or from the dashboard directory
-cd apps/dashboard
-pnpm run dev
-```
-
-The dashboard will be available at http://localhost:3000.
-
-### SDK Service (NestJS)
-
-```bash
-# From the root directory
-pnpm run dev:sdk-service
-
-# Or from the sdk-service directory
-cd apps/sdk-service
-pnpm run start:dev
-```
-
-The SDK service will be available at http://localhost:3001.
-
-## Development Workflow
-
-### Running Both Services
-
-We've provided a convenience script to run both services simultaneously:
-
-```bash
 pnpm run dev
 ```
 
 This will start both the dashboard and SDK service in development mode.
 
-### Database Management
-
-#### Prisma Studio
-
-You can use Prisma Studio to view and edit your database:
+### Or Start Each Application Individually
 
 ```bash
-pnpm run prisma:studio
+# Start the dashboard
+pnpm run dev --workspace=apps/dashboard
+
+# Start the SDK service
+pnpm run dev --workspace=apps/sdk-service
+```
+
+- The dashboard will be available at http://localhost:3000
+- The SDK service will be available at http://localhost:3001
+
+## Development Workflow
+
+### Database Management
+
+#### Using Prisma Studio
+
+Prisma Studio provides a visual interface for your database:
+
+```bash
+pnpm run prisma:studio --workspace=packages/shared
 ```
 
 This will open Prisma Studio at http://localhost:5555.
 
-#### Running Migrations
+#### Creating Migrations
 
 After making changes to the Prisma schema:
 
 ```bash
-pnpm run prisma:migrate:dev
+pnpm run prisma:migrate:dev --workspace=packages/shared
 ```
 
-### Working with Workspaces
+### Rebuilding the Shared Package
 
-PNPM workspaces make it easy to work with packages in the monorepo:
+If you make changes to the shared package, you need to rebuild it:
 
 ```bash
-# Install dependencies across all workspaces
-pnpm install
-
-# Add a dependency to a specific workspace
-pnpm --filter packages/shared add @types/node --save-dev
-
-# Run a command in a specific workspace
-pnpm --filter apps/dashboard test
+pnpm run build --workspace=packages/shared
 ```
 
-### Testing
+### Working with Multiple Terminals
 
-#### Running Tests
+For the best development experience, we recommend using multiple terminal windows or tabs:
+
+1. One for running the dashboard
+2. One for running the SDK service
+3. One for database tools and other commands
+
+## Troubleshooting
+
+### Common Issues
+
+#### 1. Dependency Not Found Errors
+
+If you see errors about `@peek-a-boo/shared` not being found in the registry, make sure you've built the shared package first:
 
 ```bash
-# Run all tests
-pnpm test
-
-# Run dashboard tests
-pnpm run test:dashboard
-
-# Run SDK service tests
-pnpm run test:sdk-service
+pnpm --filter @peek-a-boo/shared install
+pnpm --filter @peek-a-boo/shared build
 ```
 
-## Code Quality Tools
+#### 2. Database Connection Issues
 
-### Linting
+Ensure your PostgreSQL container is running:
 
-```bash
-# Lint all code
-pnpm run lint
-
-# Lint dashboard code
-pnpm run lint:dashboard
-
-# Lint SDK service code
-pnpm run lint:sdk-service
-```
-
-### Formatting
-
-```bash
-# Format all code
-pnpm run format
-```
-
-## Debugging
-
-### Dashboard (Next.js)
-
-1. Start the dashboard in debug mode:
-
-```bash
-pnpm run dev:dashboard:debug
-```
-
-2. Use Chrome DevTools or VS Code debugger to connect to `localhost:9229`.
-
-### SDK Service (NestJS)
-
-1. Start the SDK service in debug mode:
-
-```bash
-pnpm run dev:sdk-service:debug
-```
-
-2. Use Chrome DevTools or VS Code debugger to connect to `localhost:9230`.
-
-## Common Issues and Solutions
-
-### Database Connection Issues
-
-If you encounter database connection issues:
-
-1. Ensure Docker is running and the Postgres container is up:
 ```bash
 docker ps | grep postgres
 ```
 
-2. Check the database logs:
+Check that your `.env` files have the correct database connection strings.
+
+#### 3. Port Conflicts
+
+If you see errors about ports already being in use:
+
 ```bash
-docker-compose logs postgres
-```
-
-3. Verify your `.env` files have the correct database connection strings.
-
-### PNPM Workspace Issues
-
-If you encounter issues with PNPM workspaces:
-
-1. Try clearing the PNPM store:
-```bash
-pnpm store prune
-```
-
-2. Ensure your `pnpm-workspace.yaml` is correctly configured.
-
-3. Run `pnpm install --force` to rebuild the dependencies.
-
-### Port Conflicts
-
-If you encounter port conflicts:
-
-1. Check if the ports are already in use:
-```bash
+# Find what's using port 3000 (dashboard)
 lsof -i :3000
+
+# Find what's using port 3001 (SDK service)
 lsof -i :3001
 ```
 
-2. Adjust the ports in your `.env` files if needed.
+You can change the ports in the respective `.env` files.
 
 ## Next Steps
 
-After setting up your development environment, check out the following guides:
+After setting up your development environment, check out the following resources:
 
-- [Working with the Next.js Dashboard](/docs/dx/002-nextjs-dashboard.md)
-- [Working with the NestJS SDK Service](/docs/dx/003-nestjs-sdk-service.md)
-- [Authentication Overview](/docs/dx/004-authentication.md)
-- [Database Schema and Models](/docs/dx/005-database-schema.md) 
+- [Project Planning Overview](../../planning/00-project-phases.md)
+- [Feature Flag Concepts](./002-feature-flag-concepts.md)
+- [Database Schema Overview](./003-database-schema.md) 
