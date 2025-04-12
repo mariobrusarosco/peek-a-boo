@@ -47,7 +47,7 @@ This starts the NestJS SDK service on http://localhost:3001.
 #### Client SDK Development
 
 ```bash
-pnpm --filter @peek-a-boo/client-sdk dev
+pnpm dev:client-sdk
 ```
 
 This starts Rollup in watch mode to build the client SDK as you make changes.
@@ -59,7 +59,7 @@ This starts Rollup in watch mode to build the client SDK as you make changes.
 When making changes to the shared package, you need to build it for other packages to pick up the changes:
 
 ```bash
-pnpm --filter @peek-a-boo/shared build
+pnpm build:shared
 ```
 
 After building, restart your development servers to pick up the changes.
@@ -84,6 +84,25 @@ If you encounter module resolution issues:
 2. Try cleaning node_modules: `rm -rf node_modules apps/*/node_modules packages/*/node_modules && pnpm install`
 3. Check that the `.npmrc` file has the correct hoisting patterns
 
+### Module Type Issues
+
+If you encounter errors about module types or ESM imports:
+
+1. For ESM modules (using `import/export` syntax), add `"type": "module"` to the package.json
+2. For CommonJS modules (using `require/module.exports`), add `"type": "commonjs"` to the package.json (or omit as it's the default)
+3. For ESM modules importing JSON files, use the fs module:
+
+```javascript
+// Instead of this
+import pkg from './package.json';
+
+// Use this
+import { readFileSync } from 'fs';
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
+```
+
+Note: The client-sdk package uses ESM for its build configuration.
+
 ### Port Conflicts
 
 If you have port conflicts when running multiple services:
@@ -104,7 +123,9 @@ pnpm test
 Run tests for a specific package:
 
 ```bash
-pnpm --filter @peek-a-boo/dashboard test
+pnpm test:dashboard
+pnpm test:sdk-service
+pnpm test:client-sdk
 ```
 
 ## Building
@@ -120,6 +141,8 @@ Build a specific package and its dependencies:
 ```bash
 pnpm build:dashboard
 pnpm build:sdk-service
+pnpm build:client-sdk
+pnpm build:shared
 ```
 
 ## Common Development Scenarios

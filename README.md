@@ -118,6 +118,16 @@ After making changes to the Prisma schema:
 pnpm run prisma:migrate:dev --workspace=packages/shared
 ```
 
+## Troubleshooting
+
+We maintain documentation on common issues and their fixes in the `@docs/fixing-history` directory:
+
+- [Client SDK TypeScript Declaration Bundling](@docs/fixing-history/001-client-sdk-typescript-declaration-bundling.md)
+- [Next.js Lucide React Dependency Resolution](@docs/fixing-history/002-next-js-lucide-dependency-resolution.md)
+- [Client SDK Module Type Configuration](@docs/fixing-history/003-client-sdk-module-type-configuration.md)
+
+These documents can help you understand and fix common issues that you might encounter while working with this monorepo.
+
 ## Documentation
 
 For more detailed documentation, see:
