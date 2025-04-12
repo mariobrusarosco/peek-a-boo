@@ -38,34 +38,19 @@ git clone [repository-url]
 cd peek-a-boo
 ```
 
-2. **Setup shared package first**
-
-The shared package needs to be built first as other packages depend on it:
-
-```bash
-# Create .env file for the shared package
-cp packages/shared/.env.example packages/shared/.env
-
-# Build the shared package
-pnpm --filter @peek-a-boo/shared install
-pnpm --filter @peek-a-boo/shared build
-```
-
-3. **Install all dependencies**
-
-Now you can install all dependencies:
+2. **Install all dependencies**
 
 ```bash
 pnpm install
 ```
 
-4. **Start the development database**
+3. **Start the development database**
 
 ```bash
 docker-compose up -d
 ```
 
-5. **Initialize the database**
+4. **Initialize the database**
 
 ```bash
 pnpm run prisma:migrate:dev --workspace=packages/shared
@@ -73,26 +58,47 @@ pnpm run prisma:migrate:dev --workspace=packages/shared
 
 ### Running the Applications
 
-Start both applications in development mode:
+Start all applications in development mode:
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
 Or run them individually:
 
 ```bash
 # Run the dashboard
-pnpm run dev --workspace=apps/dashboard
+pnpm dev:dashboard
 
 # Run the SDK service
-pnpm run dev --workspace=apps/sdk-service
+pnpm dev:sdk-service
+
+# Run the client SDK in watch mode
+pnpm dev:client-sdk
 ```
 
 - The dashboard will be available at http://localhost:3000
 - The SDK service will be available at http://localhost:3001
 
 ## Development Workflow
+
+For a comprehensive guide on development workflows, see our [Developer Workflow Guide](docs/guides/004-developer-workflow.md).
+
+### Common Commands
+
+```bash
+# Build all packages
+pnpm build
+
+# Run tests
+pnpm test
+
+# Lint code
+pnpm lint
+
+# Format code
+pnpm format
+```
 
 ### Database Management
 
@@ -118,7 +124,10 @@ For more detailed documentation, see:
 
 - [Project Phases and Planning](planning/00-project-phases.md)
 - [Architecture Decisions](docs/decision/)
-- [Developer Guides](docs/dx/)
+- [Developer Guides](docs/guides/)
+   - [Development Environment](docs/guides/001-development-environment.md)
+   - [Database Schema](docs/guides/002-database-schema.md)
+   - [Developer Workflow](docs/guides/004-developer-workflow.md)
 
 ## License
 

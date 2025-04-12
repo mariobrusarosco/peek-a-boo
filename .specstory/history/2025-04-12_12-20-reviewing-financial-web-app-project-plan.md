@@ -14851,6 +14851,149 @@ Let's try a different approach. Since we're using Next.js, let's add a special h
 
 ---
 
+```diff
+  public-hoist-pattern[]=next
+  public-hoist-pattern[]=*eslint*
+- public-hoist-pattern[]=*prettier* 
++ public-hoist-pattern[]=*prettier*
++ public-hoist-pattern[]=lucide-react 
+```
+
+---
+
+Now let's clean the node_modules and reinstall:
+
+---
+
+```bash
+rm -rf node_modules apps/dashboard/node_modules packages/*/node_modules && pnpm install
+```
+
+```
+</dashboard/node_modules packages/*/node_modules && pnpm install
+Scope: all 5 workspace projects
+Lockfile is up to date, resolution step is skipped
+Packages: +992
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 100, downloaded 0, added 0
+Progress: resolved 0, reused 263, downloaded 0, added 0
+Progress: resolved 0, reused 601, downloaded 0, added 0
+Progress: resolved 0, reused 950, downloaded 0, added 58
+Progress: resolved 0, reused 950, downloaded 0, added 235
+Progress: resolved 0, reused 950, downloaded 0, added 413
+Progress: resolved 0, reused 950, downloaded 0, added 792
+Progress: resolved 0, reused 950, downloaded 0, added 990
+Progress: resolved 0, reused 950, downloaded 0, added 992
+Progress: resolved 0, reused 950, downloaded 0, added 992, done
+Done in 4.1s
+mario@acer-nitro:~/coding/peek-a-boo$
+```
+
+---
+
+Now let's try running the development server again:
+
+---
+
+```bash
+pnpm run dev:dashboard
+```
+
+```
+mario@acer-nitro:~/coding/peek-a-boo$ pnpm run dev:dashboard
+
+> @peek-a-boo/root@ dev:dashboard /home/mario/coding/peek-a-boo
+> turbo run dev --filter=@peek-a-boo/dashboard
+
+turbo 2.4.4
+
+• Packages in scope: @peek-a-boo/dashboard
+• Running dev in 1 packages
+• Remote caching disabled
+@peek-a-boo/dashboard:dev: cache bypass, force executing f325eaddeddd314b
+@peek-a-boo/dashboard:dev: 
+@peek-a-boo/dashboard:dev: > @peek-a-boo/dashboard@0.1.0 dev /home/mario/coding/peek-a-boo/apps/das
+hboard
+@peek-a-boo/dashboard:dev: > next dev
+@peek-a-boo/dashboard:dev: 
+@peek-a-boo/dashboard:dev:   ▲ Next.js 14.2.24
+@peek-a-boo/dashboard:dev:   - Local:        http://localhost:3000
+@peek-a-boo/dashboard:dev: 
+@peek-a-boo/dashboard:dev:  ✓ Starting...
+@peek-a-boo/dashboard:dev:  ✓ Ready in 1382ms
+@peek-a-boo/dashboard:dev:  ○ Compiling / ...
+@peek-a-boo/dashboard:dev:  ✓ Compiled / in 3.8s (816 modules)
+@peek-a-boo/dashboard:dev:  GET / 200 in 4141ms
+@peek-a-boo/dashboard:dev:  ✓ Compiled in 368ms (382 modules)
+@peek-a-boo/dashboard:dev:  ○ Compiling /_not-found ...
+@peek-a-boo/dashboard:dev:  ✓ Compiled /_not-found in 570ms (827 modules)
+@peek-a-boo/dashboard:dev:  GET /favicon.ico 200 in 669ms
+@peek-a-boo/dashboard:dev:  GET /avatars/01.png 404 in 515ms
+```
+
+---
+
+Great! It looks like the issue with lucide-react is resolved! The Next.js app is now compiling successfully. 
+
+The fix was adding `lucide-react` to the public hoisting patterns in the .npmrc file:
+
+```
+public-hoist-pattern[]=lucide-react
+```
+
+This ensures that the lucide-react package is ho
+
+---
+
+_**User**_
+
+it working! But for me, this is a minus one for PNPM! I still fear for where the WEB Development is going! You had to expose a libirary so it could be hoisted! This a solution for a problem we didnti have 5 years ago
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I completely understand your frustration! You're absolutely right - this is solving a problem that simply didn't exist years ago. The "progress" in package management has definitely introduced complexity that can feel unnecessary.
+
+What we just experienced is the classic trade-off with pnpm's strict node_modules structure. While it's great for:
+- Saving disk space (with its content-addressable store)
+- Preventing phantom dependencies
+- Ensuring deterministic builds
+
+It comes with the cost of compatibility issues, especially with tools like Next.js that weren't built with this structure in mind.
+
+The JavaScript ecosystem has become incredibly sophisticated, but that sophistication has brought complexity that can feel like two steps forward, one step back. Package management shouldn't require this much troubleshooting and special configuration.
+
+I think many developers share your concern about where web development is heading in terms of tooling complexity. Sometimes it feels like we're solving increasingly niche problems at the cost of simplicity and developer experience.
+
+---
+
+_**User**_
+
+Got it! Next topic! We need to define a standard for this Monorepo Development command:
+
+npmp dev?
+Just ran the dahboard dev command?
+
+We need to define a clear guidance for developers
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+You're absolutely right - clear guidance on commands is essential for a monorepo. Let's create a developer workflow document that standardizes the development commands:
+
+---
+
 Cancelled
 
 ---
