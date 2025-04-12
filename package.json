@@ -11,7 +11,12 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard"
+    "dev:dashboard": "turbo run dev --filter=@peek-a-boo/dashboard",
+    "build:dashboard": "turbo run build --filter=@peek-a-boo/dashboard",
+    "build:sdk-service": "turbo run build --filter=@peek-a-boo/sdk-service",
+    "deploy:dashboard": "cd apps/dashboard && vercel deploy --prod",
+    "deploy:sdk-service": "cd apps/sdk-service && railway up",
+    "prisma:migrate:deploy": "pnpm run prisma:migrate:deploy --workspace=packages/shared"
   },
   "dependencies": {
     "next": "^14.0.0"

@@ -5,5 +5,10 @@
   "github": {
     "silent": true,
     "autoJobCancelation": true
+  },
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
   }
 } 
