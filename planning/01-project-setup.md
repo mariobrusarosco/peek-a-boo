@@ -52,33 +52,33 @@ This document outlines the tasks, progress, and deliverables for Phase 1 of our 
 
 ### 3. NestJS SDK Service Setup
 
-- [x] Create NestJS app in the monorepo
-- [x] Set up TypeScript configuration
-- [x] Configure module structure
-- [x] Set up database connection
-- [x] Create basic controllers and services
-- [x] Configure environment variables
+- [] Create NestJS app in the monorepo
+- [] Set up TypeScript configuration
+- [] Configure module structure
+- [] Set up database connection
+- [] Create basic controllers and services
+- [] Configure environment variables
 
 ### 4. Client SDK Package
 
-- [x] Set up package structure
-- [x] Create basic SDK interface
-- [x] Implement feature flag evaluation logic
-- [x] Set up build process
+- [] Set up package structure
+- [] Create basic SDK interface
+- [] Implement feature flag evaluation logic
+- [] Set up build process
 
 ### 5. CI/CD Pipeline
 
-- [x] Set up GitHub Actions for linting
-- [x] Configure build workflow
-- [x] Set up test running
-- [x] Configure deployment workflow
+- [] Set up GitHub Actions for linting
+- [ ] Configure build workflow
+- [ ] Set up test running
+- [ ] Configure deployment workflow
 
 ### 6. Initial Deployment
 
-- [x] Set up Vercel project for dashboard
-- [x] Set up deployment for SDK service
-- [x] Configure database deployments
-- [x] Set up environment variables in production
+- [] Set up Vercel project for dashboard
+- [ ] Set up deployment for SDK service
+- [ ] Configure database deployments
+- [ ] Set up environment variables in production
 
 ## Deliverables
 
