@@ -12,6 +12,46 @@ This platform provides:
 - 📊 **Analytics**: Track feature flag usage and impact
 - 👥 **Multi-tenant**: Support for multiple organizations and teams
 
+## Architecture
+
+```
+Legend:
+⟶ : imports/uses
+⟹ : communicates with API
+
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│                 │     │                 │     │                 │
+│    Dashboard    │     │   SDK Service   │     │   Client App    │
+│   (Next.js)     │     │    (NestJS)     │     │                 │
+│  localhost:3000 │     │ localhost:6001  │     │                 │
+│                 │     │                 │     │                 │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         │                       │                       │
+         │                       │                       │
+         │                       │                       ⟶
+         │                       │                       │
+         │                       │                  ┌────▼────────┐
+         │                       │                  │             │
+         │                       ◀──────────────── │ Client SDK │
+         │                       │    API calls     │  (Library)  │
+         │                       │                  │             │
+         │                       │                  └─────────────┘
+         │                       │
+         │                       │
+┌────────┴───────────────────────┴───────────────────────────────────┐
+│                                                                    │
+│                         PostgreSQL Database                        │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+                               ▲
+                               │
+                      ┌────────┴────────┐
+                      │                 │
+                      │ Shared Package  │
+                      │                 │
+                      └─────────────────┘
+```
+
 ## Project Structure
 
 This is a monorepo containing:
@@ -20,6 +60,21 @@ This is a monorepo containing:
 - **SDK Service**: A NestJS application for SDK delivery and WebSockets (`apps/sdk-service`)
 - **Shared**: Shared code and database schema (`packages/shared`)
 - **Client SDK**: The JavaScript SDK for clients (`packages/client-sdk`)
+
+### Database Architecture
+
+Our database architecture follows a centralized approach:
+
+- **Central Management**: The database schema and client are managed through the `@peek-a-boo/shared` package
+- **Unified Access**: All services (dashboard, sdk-service, client-sdk) access the same database through this shared package
+- **Prisma ORM**: We use Prisma for type-safe database access and migrations
+- **PostgreSQL**: Our primary database is PostgreSQL, supporting complex relationships and transactions
+
+This architecture provides several benefits:
+- Single source of truth for database schema
+- Consistent data access patterns across services
+- Centralized migration management
+- Type-safe database queries
 
 ## Getting Started
 
@@ -73,12 +128,14 @@ pnpm dev:dashboard
 # Run the SDK service
 pnpm dev:sdk-service
 
-# Run the client SDK in watch mode
+# Build the client SDK in watch mode
 pnpm dev:client-sdk
 ```
 
+When running `pnpm dev`:
 - The dashboard will be available at http://localhost:3000
-- The SDK service will be available at http://localhost:3001
+- The SDK service will be available at http://localhost:6001
+- The client SDK is not a server; it builds the library in watch mode for use in applications
 
 ## Development Workflow
 
@@ -110,6 +167,8 @@ pnpm run prisma:studio --workspace=packages/shared
 
 This will open Prisma Studio at http://localhost:5555.
 
+For a comprehensive guide on database setup and management, see our [Database Setup Guide](docs/guides/005-database-setup.md).
+
 ### Running Migrations
 
 After making changes to the Prisma schema:
@@ -138,6 +197,7 @@ For more detailed documentation, see:
    - [Development Environment](docs/guides/001-development-environment.md)
    - [Database Schema](docs/guides/002-database-schema.md)
    - [Developer Workflow](docs/guides/004-developer-workflow.md)
+   - [Database Setup and Interaction](docs/guides/005-database-setup.md)
 
 ## License
 
