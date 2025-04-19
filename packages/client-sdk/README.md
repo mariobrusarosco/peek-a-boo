@@ -38,6 +38,18 @@ const color = client.getValue('button-color', { defaultValue: 'blue' });
 document.getElementById('button').style.backgroundColor = color;
 ```
 
+### Examples
+
+Check out the examples directory for working examples:
+
+- [Basic Usage Example](./examples/basic-usage.html) - A simple HTML page demonstrating the core functionality of the SDK
+
+To run the examples:
+
+1. Clone the repository
+2. Build the SDK: `pnpm build`
+3. Open the example file in your browser
+
 ### Advanced Usage
 
 #### User Targeting
