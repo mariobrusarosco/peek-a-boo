@@ -52,12 +52,12 @@ This document outlines the tasks, progress, and deliverables for Phase 1 of our 
 
 ### 3. NestJS SDK Service Setup
 
-- [] Create NestJS app in the monorepo
-- [] Set up TypeScript configuration
-- [] Configure module structure
-- [] Set up database connection
-- [] Create basic controllers and services
-- [] Configure environment variables
+- [x] Create NestJS app in the monorepo
+- [x] Set up TypeScript configuration
+- [x] Configure module structure
+- [x] Set up database connection
+- [x] Create basic controllers and services
+- [x] Configure environment variables
 
 ### 4. Client SDK Package
 

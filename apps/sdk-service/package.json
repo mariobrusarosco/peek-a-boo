@@ -1,6 +1,6 @@
 {
   "name": "@peek-a-boo/sdk-service",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Backend service for Feature Flag SaaS SDK delivery and WebSockets",
   "license": "MIT",
@@ -9,6 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "dev": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
