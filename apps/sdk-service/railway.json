@@ -2,11 +2,21 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "pnpm install && pnpm --filter @peek-a-boo/shared build && pnpm --filter @peek-a-boo/sdk-service build"
+    "nixpacksVersion": "1.13.0",
+    "nixpacks": {
+      "install": {
+        "cmds": [
+          "npm i -g pnpm@8.15.4",
+          "cd ../.. && pnpm install --no-frozen-lockfile",
+          "cd ../../packages/shared && pnpm build",
+          "cd ../../apps/sdk-service && pnpm build"
+        ]
+      }
+    }
   },
   "deploy": {
-    "startCommand": "cd dist && node main.js",
-    "healthcheckPath": "/api/health",
+    "startCommand": "node dist/main.js",
+    "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10

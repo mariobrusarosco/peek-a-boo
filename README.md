@@ -28,11 +28,11 @@ Legend:
 └────────┬────────┘     └────────┬────────┘     └────────┬────────┘
          │                       │                       │
          │                       │                       │
-         │                       │                       ⟶
          │                       │                       │
-         │                       │                  ┌────▼────────┐
+         │                       │                       ↓
+         │                       │                  ┌─────────────┐
          │                       │                  │             │
-         │                       ◀──────────────── │ Client SDK │
+         │                       ◀─────────────────┐│ Client SDK  │
          │                       │    API calls     │  (Library)  │
          │                       │                  │             │
          │                       │                  └─────────────┘
@@ -198,6 +198,9 @@ For more detailed documentation, see:
    - [Database Schema](docs/guides/002-database-schema.md)
    - [Developer Workflow](docs/guides/004-developer-workflow.md)
    - [Database Setup and Interaction](docs/guides/005-database-setup.md)
+   - [CI/CD Pipeline](docs/guides/006-ci-cd-pipeline.md)
+   - [Environment Variables Setup](docs/guides/007-environment-variables-setup.md)
+   - [Railway Deployment Setup](docs/guides/008-railway-deployment-setup.md)
 
 ## License
 
