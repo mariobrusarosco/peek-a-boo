@@ -1,0 +1,3 @@
+[build]
+# Point to the JSON config file for the SDK service
+config_path = "apps/sdk-service/railway.json" 
