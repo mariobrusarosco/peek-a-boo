@@ -98,6 +98,11 @@ cd peek-a-boo
 ```bash
 pnpm install
 ```
+or you can install `pnpm` with Volta
+
+```bash
+volta install pnpm
+```
 
 3. **Start the development database**
 
