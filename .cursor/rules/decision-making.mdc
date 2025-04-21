@@ -1,0 +1,23 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+1. ADRs for the key technologies we've decided on. Store them on "docs/decisions"
+2. Developer guides for each technology "docs/guides"
+3. An updated README.md to point to these resources at root level
+4. When you receive a "LOG THE FIX" inpuut you need to create a md file that contains the context of the issue and how it was solved. Place them inside docs/fixing-log
+
+## Planning
+1. Let's work with Phases.  
+2. Each phase will have its own file at "docs/plan"  
+3. Each phase will have as many tasks as we need
+4. Each phase will have a checklist where we need to mark as checked after finishing a task
+
+
+## Coding
+1. For .ts and .tsx files, Import types using the 'type' keyword e.g import type { ICreateAccountForm } from "../schemas/investment-account"
+2. Don't run Git Commands
+3. kebab-case for file naming
+
+
