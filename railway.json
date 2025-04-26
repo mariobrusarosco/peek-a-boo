@@ -1,4 +1,5 @@
 {
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "nixpacks",
     "buildCommand": "pnpm build:shared && pnpm build:sdk-service"
@@ -8,5 +9,10 @@
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "on_failure"
+  },
+  "variables": {
+    "NIXPACKS_NODE_VERSION": "22",
+    "NODE_ENV": "production",
+    "SKIP_ENV_VALIDATION": "1"
   }
 } 
