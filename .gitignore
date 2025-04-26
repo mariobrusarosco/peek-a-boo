@@ -9,5 +9,14 @@ node_modules
 
 
 # Compiled/Transpiled output
+packages/shared/dist
+packages/sdk-service/dist
+apps/sdk-service/dist
+
 dist
 build
+
+# Railway
+.railway
+
+

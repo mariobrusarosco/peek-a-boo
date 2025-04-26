@@ -1,10 +1,6 @@
 {
   "name": "@peek-a-boo/root",
   "private": true,
-  "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.15.4"
-  },
   "scripts": {
     "build": "turbo run build",
     "build:ci": "turbo run build --filter=@peek-a-boo/dashboard...",
@@ -27,16 +23,16 @@
     "prisma:migrate:deploy": "pnpm run prisma:migrate:deploy --workspace=packages/shared",
     "setup:env": "./scripts/setup-env.sh"
   },
-  "dependencies": {
-    "next": "^14.0.0"
-  },
   "devDependencies": {
-    "turbo": "^2.1.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "turbo": "^2.1.0"
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.6",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
-} 
+  ],
+  "dependencies": {
+    "typescript": "5.8.3"
+  }
+}

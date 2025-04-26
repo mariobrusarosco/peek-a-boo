@@ -37,7 +37,7 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_DASHBOARD }}
           working-directory: ./apps/dashboard
           
-  deploy-sdk-service:
+ 
     name: Deploy SDK Service
     runs-on: ubuntu-latest
     environment: production

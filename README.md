@@ -2,6 +2,10 @@
 
 A modern, scalable feature flag management platform that helps teams deploy features safely and efficiently.
 
+SDK Client hosted at https://github.com/peek-a-boo/peek-a-boo-client-sdk
+Dashboard hosted at https://peek-a-boo-dashboard.vercel.app/
+SDK Service hosted at https://github.com/peek-a-boo/peek-a-boo-sdk-service
+
 ## Overview
 
 This platform provides:

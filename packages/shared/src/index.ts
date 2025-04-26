@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '.prisma/client';
 
 // Export types and enums from Prisma
-export * from '@prisma/client';
+export * from '.prisma/client';
 
 // Create a singleton Prisma client
 declare global {
