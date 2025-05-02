@@ -22,15 +22,16 @@ export default function AuthSideBar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   
-
   return (
     <Sidebar className='bg-background'>
       <SidebarHeader className="flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">P</span>
           {!isCollapsed && (
             <>
-              <span className="text-lg font-semibold">eek-a-boo</span>
+              <span className="text-lg">
+                <i className='text-primary text-2xl'>P</i>
+                <span className='text-2xl'>eek a Boo</span>
+              </span>
               <span className="text-xs bg-primary text-white px-2 py-1 rounded-md">beta</span>
             </>
           )}

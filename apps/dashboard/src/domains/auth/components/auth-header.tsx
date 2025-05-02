@@ -23,7 +23,7 @@ export default function Header({ className }: { className?: string }) {
     <header className={`border-b bg-background px-4 lg:px-6 ${className}`}>
       <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          {/* <SidebarTrigger /> */}
+          <SidebarTrigger />
         </div>
 
         <div className="flex items-center gap-2">
