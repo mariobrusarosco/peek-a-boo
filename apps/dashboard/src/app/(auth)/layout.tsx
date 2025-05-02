@@ -14,6 +14,7 @@ export default function AuthLayout({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <div className="min-h-screen flex bg-background">
         <AuthSideBar />
+
         <div className="flex-1 flex flex-col">
           <Header />
           <main className="flex-1 overflow-auto">
