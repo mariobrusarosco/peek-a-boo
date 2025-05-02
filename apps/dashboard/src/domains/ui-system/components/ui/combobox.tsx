@@ -43,7 +43,7 @@ const frameworks = [
 ]
 
 export function ComboboxDemo() {
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
   return (
@@ -63,7 +63,6 @@ export function ComboboxDemo() {
       </PopoverTrigger>
 
       <PopoverContent className="w-[200px] p-0">
-        axdadasdsd
         <Command>
           <CommandInput placeholder="Search framework..." className="h-9" />
           <CommandList>

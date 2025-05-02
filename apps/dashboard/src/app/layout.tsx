@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/domains/ui-system/globals.css";
+import "@/domains/ui-system/components/custom-styles.css";
 import { ThemeProvider } from "@/domains/ui-system/components/theme-provider";
 
 const inter = Inter({
@@ -23,8 +24,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}
