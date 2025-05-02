@@ -42,20 +42,6 @@ Before you begin, ensure you have the following installed:
 
    This connection string matches the configuration in the `docker-compose.yml` file.
 
-### Option 2: Manual PostgreSQL Setup
-
-If you prefer to use a locally installed PostgreSQL instance:
-
-1. **Create a new database**:
-
-   ```bash
-   createdb feature_flags_dev
-   ```
-
-2. **Update Environment Variables**:
-
-   Adjust your `.env` file with your custom database connection details.
-
 ## Database Schema
 
 Our database schema is managed using Prisma. You can find the schema definition in `packages/shared/prisma/schema.prisma`.

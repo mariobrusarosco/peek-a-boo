@@ -16,16 +16,16 @@ import {
 import { Bell, Settings, User, LogOut } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
+import { SidebarTrigger } from '@/components/ui/sidebar';
+
 export default function Header({ className }: { className?: string }) {
   return (
-    <header className={`sticky top-0 z-40 border-b bg-background px-4 lg:px-6 ${className}`}>
+    <header className={`border-b bg-background px-4 lg:px-6 ${className}`}>
       <div className="flex h-16 items-center justify-between">
-        <div className="flex">
-          <Link href="/" className="flex items-center">
-            <span className="text-xl font-bold text-indigo-600">Peek-a-boo</span>
-          </Link>
+        <div className="flex items-center gap-2">
+          <SidebarTrigger />
         </div>
-
+      
         <div className="flex items-center gap-2">
           <ThemeToggle />
 

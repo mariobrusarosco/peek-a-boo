@@ -104,6 +104,19 @@ pnpm install
 ```
 or you can install `pnpm` with Volta
 
+*Install Volta*
+
+Unix
+```bash
+curl https://get.volta.sh | bash 
+```
+
+Windows
+```bash
+winget install Volta.Volta
+```   
+
+Install pnpm
 ```bash
 volta install pnpm
 ```
