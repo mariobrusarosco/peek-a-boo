@@ -9,16 +9,20 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "prisma:erd": "prisma generate --generator erd"
+    "prisma:erd": "prisma generate --generator erd",
+    "prisma:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.4.1"
+    "@prisma/client": "^5.4.1",
+    "bcrypt": "^5.1.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.19",
     "prisma": "^5.4.1",
     "prisma-erd-generator": "^1.11.2",
     "@prisma/generator-helper": "^5.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2"
   }
 } 
