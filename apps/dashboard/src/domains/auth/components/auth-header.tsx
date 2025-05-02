@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/domains/ui-system/components/ui/avatar';
+import { Button } from '@/domains/ui-system/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +12,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/domains/ui-system/components/ui/dropdown-menu';
 import { Bell, Settings, User, LogOut } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
-
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarTrigger } from '@/domains/ui-system/components/ui/sidebar';
+import { ThemeToggle } from '@/domains/ui-system/components/theme-toggle';
+import { Separator } from '@/domains/ui-system/components/ui/separator';
 
 export default function Header({ className }: { className?: string }) {
   return (
@@ -25,10 +25,8 @@ export default function Header({ className }: { className?: string }) {
         <div className="flex items-center gap-2">
           <SidebarTrigger />
         </div>
-      
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
 
+        <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
@@ -63,6 +61,12 @@ export default function Header({ className }: { className?: string }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <Separator orientation="vertical" className="h-8 mx-2" />
+          {/* <AuthUserNav /> */}
         </div>
       </div>
     </header>

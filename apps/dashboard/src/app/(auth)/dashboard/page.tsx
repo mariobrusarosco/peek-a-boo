@@ -1,3 +1,5 @@
+import { PopoverDemo } from "@/domains/auth/components/auth-header";
+
 export default function DashboardScreen() {
   return (
     <div>
@@ -9,6 +11,8 @@ export default function DashboardScreen() {
           </button>
         </div>
       </div>
+
+      <PopoverDemo />
       
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

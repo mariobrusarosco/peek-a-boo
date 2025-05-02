@@ -1,7 +1,7 @@
 'use client';
 
-import Header from '@/components/header';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import Header from '@/domains/auth/components/auth-header';
+import { SidebarProvider } from '@/domains/ui-system/components/ui/sidebar';
 import AuthSideBar from '@/domains/auth/components/auth-sidebar';
 
 

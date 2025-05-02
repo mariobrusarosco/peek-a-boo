@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Link from 'next/link';
 import {
   Sidebar,
@@ -10,12 +11,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
-} from '@/components/ui/sidebar';
-import { LayoutDashboard, Folder, Flag, Settings, Users } from 'lucide-react';
+} from '@/domains/ui-system/components/ui/sidebar';
+import { LayoutDashboard, Folder, Flag, Settings, Users, Check, ChevronsUpDown } from 'lucide-react';
+import { ComboboxDemo } from '@/domains/ui-system/components/ui/combobox';
+
 
 export default function AuthSideBar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  
 
   return (
     <Sidebar>
@@ -32,6 +36,15 @@ export default function AuthSideBar() {
       </SidebarHeader>
       
       <SidebarContent>
+        {/* Project Selector */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider text-muted-foreground">
+            Projects
+          </SidebarGroupLabel>
+          <SidebarGroupContent className="p-2">
+            <ComboboxDemo />
+          </SidebarGroupContent>
+        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider text-muted-foreground">
             Main
