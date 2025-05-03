@@ -1,8 +1,6 @@
-'use client';
-
 import Header from '@/domains/auth/components/auth-header';
 import { SidebarProvider } from '@/domains/ui-system/components/ui/sidebar';
-import AuthSideBar from '@/domains/auth/components/auth-sidebar';
+import AuthSideBarContainer from '@/domains/auth/components/auth-sidebar-container';
 
 
 interface DashboardLayoutProps {
@@ -13,7 +11,7 @@ export default function AuthLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex bg-background">
-        <AuthSideBar />
+        <AuthSideBarContainer />
 
         <div className="flex-1 flex flex-col">
           <Header />
