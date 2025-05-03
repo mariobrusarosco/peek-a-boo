@@ -26,6 +26,7 @@ export class ProjectsService {
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const user = await this.prismaService.user.findFirst();
     
+    // TODO:  Add API Error Mapping 
     if (!user) {
       throw new NotFoundException('No users found in the system');
     }
