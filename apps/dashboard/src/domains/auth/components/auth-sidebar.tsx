@@ -14,11 +14,16 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/domains/ui-system/components/ui/sidebar';
-import { LayoutDashboard, Folder, Flag, Settings, Users, Check, ChevronsUpDown } from 'lucide-react';
-import { ComboboxDemo } from '@/domains/ui-system/components/ui/combobox';
+import { LayoutDashboard, Folder, Flag, Settings, Users } from 'lucide-react';
+import { ProjectSearch } from '@/domains/projects/components/project-search';
+import type { Project } from '@peek-a-boo/shared/node_modules/.prisma/client';
 
 
-export default function AuthSideBar() {
+interface AuthSideBarProps {
+  projects: Project[];
+}
+
+export default function AuthSideBar({ projects }: AuthSideBarProps) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   
@@ -45,7 +50,7 @@ export default function AuthSideBar() {
             Projects
           </SidebarGroupLabel>
           <SidebarGroupContent className="p-2">
-            <ComboboxDemo />
+            <ProjectSearch projects={projects} />
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>

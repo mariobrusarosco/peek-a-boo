@@ -13,34 +13,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/domains/ui-system/components/ui/dropdown-menu"
+import type { Project } from "@peek-a-boo/shared/node_modules/.prisma/client"
 
-// Mock projects data
-const projects = [
-  { value: "default", label: "Default Project" },
-  { value: "web-app", label: "Web Application" },
-  { value: "mobile-app", label: "Mobile Application" },
-  { value: "api-service", label: "API Service" },
-  { value: "backend", label: "Backend Service" },
-]
+interface ProjectSearchProps {
+  projects: Project[]
+}
 
-export function ProjectSearch() {
+export function ProjectSearch({ projects }: ProjectSearchProps) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-  const [value, setValue] = React.useState("backend")
-  const [open, setOpen] = React.useState(true)
-  
+  const [selectedId, setSelectedId] = React.useState<string | null>(
+    projects.length > 0 ? projects[0].id : null
+  )
+  const [open, setOpen] = React.useState(false)
+
   // Handle project selection
-  const handleSelect = (projectValue: string) => {
-    setValue(projectValue)
-    console.log('Selected project:', projectValue)
+  const handleSelect = (projectId: string) => {
+    setSelectedId(projectId)
     setOpen(false)
   }
-  
-  // Log state changes for debugging
-  React.useEffect(() => {
-    console.log('Dropdown state:', open)
-  }, [open])
-  
+   
+  // No projects state
+  if (projects.length === 0) {
+    return (
+      <Button variant="outline" className="w-full justify-between" disabled>
+        No projects available
+      </Button>
+    )
+  }
+
   // Simple version for collapsed sidebar
   if (isCollapsed) {
     return (
@@ -65,7 +66,7 @@ export function ProjectSearch() {
           aria-expanded={open}
         >
           <span>
-            {projects.find(project => project.value === value)?.label || "Select project..."}
+            {projects.find(project => project.id === selectedId)?.name || "Select project..."}
           </span>
           <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-70" />
         </Button>
@@ -77,11 +78,11 @@ export function ProjectSearch() {
         <DropdownMenuGroup>
           {projects.map((project) => (
             <DropdownMenuItem 
-              key={project.value} 
-              onClick={() => handleSelect(project.value)}
+              key={project.id} 
+              onClick={() => handleSelect(project.id)}
             >
-              <span>{project.label}</span>
-              {project.value === value && (
+              <span>{project.name}</span>
+              {project.id === selectedId && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
