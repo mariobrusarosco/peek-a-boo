@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { FeatureFlagsModule } from './feature-flags/feature-flags.module';
 import { HealthModule } from './health/health.module';
+import { ProjectsModule } from './domains/projects/projects.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { HealthModule } from './health/health.module';
     PrismaModule,
     FeatureFlagsModule,
     HealthModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

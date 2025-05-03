@@ -25,11 +25,11 @@ The "Create Project" feature allows users to create new projects in the system. 
 
 ### 2. Backend API Implementation
 
-- [ ] Create ProjectController in SDK Service (NestJS)
-- [ ] Implement POST /projects endpoint for project creation
-- [ ] Implement GET /projects endpoint to list projects
-- [ ] Add validation for project name
-- [ ] Add error handling for duplicate projects
+- [x] Create ProjectController in SDK Service (NestJS)
+- [x] Implement POST /projects endpoint for project creation
+- [x] Implement GET /projects endpoint to list projects
+- [x] Add validation for project name
+- [x] Add error handling for duplicate projects
 - [ ] Write unit tests for the controller
 - [ ] Write integration tests for the API endpoints
 

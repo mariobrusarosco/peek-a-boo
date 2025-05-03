@@ -1,25 +1,23 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaClient } from '@peek-a-boo/shared/node_modules/.prisma/client';
 
 @Injectable()
-export class PrismaService implements OnModuleInit, OnModuleDestroy {
-  constructor() {}
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  constructor() {
+    super({
+      log: ['query', 'info', 'warn', 'error'],
+    });
+  }
 
   async onModuleInit() {
-    // Initialize any required connections
-    console.log('PrismaService initialized');
+    // Connect to the database when the module is initialized
+    await this.$connect();
+    console.log('PrismaService connected to database');
   }
 
   async onModuleDestroy() {
-    // Clean up any resources
-    console.log('PrismaService destroyed');
+    // Disconnect from the database when the module is destroyed
+    await this.$disconnect();
+    console.log('PrismaService disconnected from database');
   }
-  
-  // Mock database methods for now
-  async findMany(model: string) {
-    return [];
-  }
-  
-  async findUnique(params: any) {
-    return null;
-  }
-} 
+}
