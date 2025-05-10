@@ -5,7 +5,18 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"],
-      "env": []
+      "env": [
+        "DATABASE_URL",
+        "SUPABASE_PROJECT_ID",
+        "SUPABASE_DB_PASSWORD",
+        "NEXTAUTH_URL",
+        "NEXTAUTH_SECRET",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NODE_ENV",
+        "VERCEL_ENV",
+        "VERCEL_URL"
+      ]
     },
     "dev": {
       "cache": false,
@@ -14,4 +25,4 @@
     "lint": {},
     "lint:types": {}
   }
-} 
+}
