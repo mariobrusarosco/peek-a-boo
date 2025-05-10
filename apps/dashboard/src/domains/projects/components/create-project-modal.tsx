@@ -73,7 +73,7 @@ export default function CreateProjectModal({
           <DialogHeader>
             <DialogTitle>Create New Project</DialogTitle>
             <DialogDescription>
-              Enter a name for your new project. Click create when you're done.
+              Enter a name for your new project. Click create when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

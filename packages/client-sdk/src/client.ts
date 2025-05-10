@@ -13,8 +13,8 @@ export class FeatureFlagClient {
   private readonly pollingInterval: number;
   private readonly defaultContext?: FlagContext;
   private readonly enableLogs: boolean;
-  private readonly defaultFlagValues: Record<string, any>;
-  private flags: Record<string, any> = {};
+  private readonly defaultFlagValues: Record<string, unknown>;
+  private flags: Record<string, unknown> = {};
   private events = new EventEmitter();
   private pollTimer?: number;
   private isInitialized = false;
@@ -63,26 +63,32 @@ export class FeatureFlagClient {
     
     if (!this.isInitialized) {
       this.log(`Flag '${key}' checked before initialization, returning default: ${defaultValue}`);
-      return defaultValue;
+      return defaultValue as boolean;
     }
 
     const flag = this.flags[key];
     if (flag === undefined) {
       this.log(`Flag '${key}' not found, returning default: ${defaultValue}`);
-      return defaultValue;
+      return defaultValue as boolean;
     }
 
     const context = this.mergeContext(options?.context);
     
     // Basic targeting logic - in real implementation this would
     // check rules against the context
-    if (typeof flag === 'object' && flag.targeting && context.userId) {
+    if (typeof flag === 'object' && flag !== null && 'targeting' in flag && context.userId) {
       // Simple example of targeting logic
-      return this.evaluateTargeting(flag, context, defaultValue);
+      return this.evaluateTargeting(flag, context, defaultValue as boolean);
     }
 
-    // Simple boolean flag
-    return flag === true || flag.enabled === true;
+    // Simple boolean flag or object with enabled property
+    if (typeof flag === 'boolean') {
+      return flag;
+    } else if (typeof flag === 'object' && flag !== null && 'enabled' in flag && typeof (flag as { enabled: unknown }).enabled === 'boolean') {
+      return (flag as { enabled: boolean }).enabled;
+    }
+    
+    return defaultValue as boolean; // Fallback
   }
 
   /**
@@ -108,17 +114,18 @@ export class FeatureFlagClient {
     const context = this.mergeContext(options?.context);
     
     // For object flags with targeting
-    if (typeof flag === 'object' && flag.targeting && context.userId) {
-      const variant = this.evaluateTargeting(flag, context, defaultValue);
-      return (variant ? flag.value : defaultValue) as T;
+    if (typeof flag === 'object' && flag !== null && 'targeting' in flag && 'value' in flag && context.userId) {
+      const evaluationResult = this.evaluateTargeting(flag, context, defaultValue);
+      // If targeting returns true, use the flag's value, otherwise use defaultValue
+      return (evaluationResult ? (flag as { value: T }).value : defaultValue) as T;
     }
 
-    // For object flags with value property
-    if (typeof flag === 'object' && flag.value !== undefined) {
-      return flag.value as T;
+    // For object flags with value property (no targeting or targeting didn't apply/match)
+    if (typeof flag === 'object' && flag !== null && 'value' in flag) {
+      return (flag as { value: T }).value;
     }
 
-    // For simple value flags
+    // For simple value flags (boolean, string, number)
     return flag as T;
   }
 
@@ -127,8 +134,21 @@ export class FeatureFlagClient {
    * @param callback Function to call when flags change
    * @returns Unsubscribe function
    */
-  onFlagsChanged(callback: (flags: Record<string, any>) => void): () => void {
-    return this.events.on('flagsChanged', callback);
+  onFlagsChanged(callback: (flags: Record<string, unknown>) => void): () => void {
+    return this.events.on('flagsChanged', callback as (...args: unknown[]) => void);
+  }
+
+  /**
+   * Initialize the client and fetch flags
+   * @returns Promise that resolves when initialization is complete
+   */
+  async initialize(): Promise<void> {
+    if (this.isInitialized) {
+      this.log('Client already initialized');
+      return;
+    }
+    
+    await this.fetchFlags();
   }
 
   /**
@@ -162,7 +182,7 @@ export class FeatureFlagClient {
         throw new Error(`Failed to fetch flags: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const data = await response.json() as { flags?: Record<string, unknown> }; // Assert type of data
       
       // Update flags and notify subscribers
       this.flags = data.flags || {};
@@ -175,19 +195,6 @@ export class FeatureFlagClient {
       this.isError = true;
       this.log('Error fetching flags:', error);
     }
-  }
-
-  /**
-   * Initialize the client and fetch flags
-   * @returns Promise that resolves when initialization is complete
-   */
-  async initialize(): Promise<void> {
-    if (this.isInitialized) {
-      this.log('Client already initialized');
-      return;
-    }
-    
-    await this.fetchFlags();
   }
 
   /**
@@ -218,55 +225,81 @@ export class FeatureFlagClient {
     };
   }
 
-  private evaluateTargeting(flag: any, context: FlagContext, defaultValue: any): boolean {
-    // Simple targeting implementation - in a real SDK this would be more sophisticated
+  private evaluateTargeting(flag: unknown, context: FlagContext, defaultValue: unknown): boolean {
     try {
-      if (!flag.targeting || !flag.targeting.rules || !Array.isArray(flag.targeting.rules)) {
-        return flag.enabled === true;
+      // Ensure flag is an object and not null
+      if (!flag || typeof flag !== 'object') {
+        return defaultValue as boolean; 
       }
-      
-      // Check if any targeting rule matches
-      for (const rule of flag.targeting.rules) {
+
+      // Check for default enabled state of the flag itself, if targeting doesn't apply/match
+      let flagEnabledState: boolean | undefined = undefined;
+      if ('enabled' in flag && typeof (flag as { enabled: unknown }).enabled === 'boolean') {
+        flagEnabledState = (flag as { enabled: boolean }).enabled;
+      }
+
+      // Check for targeting property and its validity
+      if (!('targeting' in flag) || 
+          !flag.targeting || 
+          typeof flag.targeting !== 'object' || 
+          flag.targeting === null) {
+        // No targeting property, or it's not a valid object. Use flag's own enabled state or default.
+        return flagEnabledState !== undefined ? flagEnabledState : defaultValue as boolean;
+      }
+
+      // Now, flag.targeting is known to be a non-null object. Check for its 'rules' property.
+      const targetingConfig = flag.targeting as { rules?: unknown };
+
+      if (!('rules' in targetingConfig) || !Array.isArray(targetingConfig.rules)) {
+        // No 'rules' array in targetingConfig. Use flag's own enabled state or default.
+        return flagEnabledState !== undefined ? flagEnabledState : defaultValue as boolean;
+      }
+
+      // Now targetingConfig.rules is known to be an array.
+      for (const rule of targetingConfig.rules) {
         if (this.matchesRule(rule, context)) {
-          return true;
+          return true; // A rule matched, feature is enabled by this rule
         }
       }
       
-      // No rules matched
-      return flag.enabled === true;
+      // No rules matched. Use flag's own enabled state or default.
+      return flagEnabledState !== undefined ? flagEnabledState : defaultValue as boolean;
+
     } catch (error) {
       this.log('Error evaluating targeting rules:', error);
-      return defaultValue;
+      return defaultValue as boolean;
     }
   }
 
-  private matchesRule(rule: any, context: FlagContext): boolean {
+  private matchesRule(rule: unknown, context: FlagContext): boolean {
     // Very simple rule matching - real implementation would be more robust
-    const attribute = rule.attribute;
-    const operator = rule.operator;
-    const value = rule.value;
+    const attribute = rule && typeof rule === 'object' && 'attribute' in rule ? rule.attribute : undefined;
+    const operator = rule && typeof rule === 'object' && 'operator' in rule ? rule.operator : undefined;
+    const value = rule && typeof rule === 'object' && 'value' in rule ? rule.value : undefined;
     
-    if (!attribute || !operator || value === undefined || context[attribute] === undefined) {
+    const contextValue = context[attribute as string];
+
+    if (!attribute || !operator || value === undefined || contextValue === undefined) {
       return false;
     }
     
     switch (operator) {
       case 'EQUALS':
-        return context[attribute] === value;
+        return contextValue === value;
       case 'NOT_EQUALS':
-        return context[attribute] !== value;
+        return contextValue !== value;
       case 'CONTAINS':
-        return String(context[attribute]).includes(String(value));
+        return typeof contextValue === 'string' && typeof value === 'string' && contextValue.includes(value);
       case 'IN':
-        return Array.isArray(value) && value.includes(context[attribute]);
+        return Array.isArray(value) && value.includes(contextValue);
       default:
         return false;
     }
   }
 
-  private log(...args: any[]): void {
+  private log(...args: unknown[]): void {
     if (this.enableLogs) {
       logger.info(...args);
     }
   }
-} 
+}

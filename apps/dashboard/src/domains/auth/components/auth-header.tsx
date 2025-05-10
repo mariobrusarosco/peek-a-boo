@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/domains/ui-system/components/ui/avatar';
 import { Button } from '@/domains/ui-system/components/ui/button';
 import {

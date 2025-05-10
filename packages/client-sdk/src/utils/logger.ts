@@ -5,7 +5,7 @@ export const logger = {
   /**
    * Log informational message
    */
-  info: (...args: any[]): void => {
+  info: (...args: unknown[]): void => {
     if (typeof console !== 'undefined') {
       console.info('[Peek-a-boo]', ...args);
     }
@@ -14,7 +14,7 @@ export const logger = {
   /**
    * Log warning message
    */
-  warn: (...args: any[]): void => {
+  warn: (...args: unknown[]): void => {
     if (typeof console !== 'undefined') {
       console.warn('[Peek-a-boo]', ...args);
     }
@@ -23,7 +23,7 @@ export const logger = {
   /**
    * Log error message
    */
-  error: (...args: any[]): void => {
+  error: (...args: unknown[]): void => {
     if (typeof console !== 'undefined') {
       console.error('[Peek-a-boo]', ...args);
     }

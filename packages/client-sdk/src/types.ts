@@ -9,7 +9,7 @@ export interface FlagContext {
   userAgent?: string;
   country?: string;
   language?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -40,7 +40,7 @@ export interface ClientOptions {
   /**
    * Initial flag values to bootstrap the SDK
    */
-  bootstrap?: Record<string, any>;
+  bootstrap?: Record<string, unknown>;
   
   /**
    * Enable detailed logging
@@ -50,7 +50,7 @@ export interface ClientOptions {
   /**
    * Default values to use when a flag is not found
    */
-  defaultFlagValues?: Record<string, any>;
+  defaultFlagValues?: Record<string, unknown>;
   
   /**
    * Default context to use for all flag evaluations
@@ -70,5 +70,5 @@ export interface FlagOptions {
   /**
    * Default value to return if flag is not found
    */
-  defaultValue?: any;
-} 
+  defaultValue?: unknown;
+}

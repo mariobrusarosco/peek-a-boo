@@ -1,4 +1,7 @@
-type EventCallback = (...args: any[]) => void;
+/**
+ * Type for event callback functions
+ */
+type EventCallback = (...args: unknown[]) => void;
 
 /**
  * Simple event emitter for the SDK
@@ -33,7 +36,7 @@ export class EventEmitter {
    * @param event Event name
    * @param args Arguments to pass to event handlers
    */
-  emit(event: string, ...args: any[]): void {
+  emit(event: string, ...args: unknown[]): void {
     const callbacks = this.events[event];
     if (callbacks) {
       callbacks.forEach(callback => {
@@ -55,4 +58,4 @@ export class EventEmitter {
   clear(): void {
     this.events = {};
   }
-} 
+}
