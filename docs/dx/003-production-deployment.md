@@ -1,4 +1,55 @@
 # Production Deployment Guide
+                                     Development & Git
+                                           │
+                                           ▼
+                               ┌───────────────────────┐
+                               │ Git Push to Monorepo  │
+                               │ (e.g., main branch)   │
+                               └───────────────────────┘
+                                           │
+                       ┌───────────────────┴───────────────────┐
+                       │                                       │
+                       ▼                                       ▼
+         ┌─────────────────────────┐            ┌─────────────────────────┐
+         │  Vercel Git Hook Detects│            │ Railway Git Hook Detects│
+         │    Push for Dashboard   │            │   Push for SDK Service  │
+         └─────────────────────────┘            └─────────────────────────┘
+                       │                                       │
+                       ▼                                       ▼
+         ┌─────────────────────────┐            ┌─────────────────────────┐
+         │ Vercel: Clones Repo,    │            │ Railway: Clones Repo,   │
+         │ Installs Deps, Builds   │            │ Installs Deps, Builds   │
+         │ @peek-a-boo/dashboard   │            │ @peek-a-boo/sdk-service │
+         │ (using Turborepo)       │            │ (using Turborepo)       │
+         └─────────────────────────┘            └─────────────────────────┘
+                       │                                       │
+                       ▼                                       ▼
+         ┌─────────────────────────┐            ┌─────────────────────────┐
+         │   Vercel: Deploys       │            │ Railway: Runs Migrations│
+         │   Dashboard App         │            │ & Deploys SDK Service   │
+         └─────────────────────────┘            └─────────────────────────┘
+                       │                                       │
+                       ▼                                       ▼
+           ┌──────────────────────┐                 ┌──────────────────────┐
+           │   Live Next.js       │                 │   Live NestJS        │
+           │   Dashboard UI       │                 │   SDK Service API    │
+           │   (on Vercel)        │                 │   (on Railway)       │
+           └──────────────────────┘                 └──────────────────────┘
+                       │                                       │
+                       └───────────────┬───────────────────────┘
+                                       │
+                                       ▼
+                            ┌────────────────────┐
+                            │ Supabase           │
+                            │ (PostgreSQL DB)    │
+                            │ (Production)       │
+                            └────────────────────┘
+
+Legend:
+  UI App Flow: Shows path for Dashboard deployment
+  API/Service Flow: Shows path for SDK Service deployment
+  Shared Resource: Database used by both (primarily SDK service, dashboard via its own API routes if needed)
+
 
 This guide provides instructions for deploying the Peek-a-boo feature flag platform to production environments.
 
