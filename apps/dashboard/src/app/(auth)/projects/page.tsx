@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import ProjectListContainer from './components/project-list-container';
-import CreateProjectButton from './components/create-project-button';
+import ProjectListContainer from '../../../domains/projects/components/project-list-container';
+import CreateProjectButton from '../../../domains/projects/components/create-project-button';
 import Loading from './loading';
 
 export default function ProjectsPage() {

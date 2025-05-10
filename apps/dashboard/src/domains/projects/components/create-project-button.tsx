@@ -24,11 +24,7 @@ export default function CreateProjectButton() {
         throw new Error(`Error creating project: ${response.statusText}`);
       }
       
-      // Close the modal
       setIsModalOpen(false);
-      
-      // Refresh the current route to show the new project
-      // This triggers a new server fetch
       router.refresh();
       
       return true;

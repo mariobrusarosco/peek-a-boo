@@ -47,7 +47,7 @@ export default function AuthSideBar({ projects }: AuthSideBarProps) {
         {/* Project Selector */}
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider text-muted-foreground">
-            Projects
+            <Link href="/projects">Projects</Link>
           </SidebarGroupLabel>
           <SidebarGroupContent className="p-2">
             <ProjectSearch projects={projects} />
