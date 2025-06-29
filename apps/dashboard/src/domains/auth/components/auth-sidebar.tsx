@@ -16,7 +16,7 @@ import {
 } from "@/domains/ui-system/components/ui/sidebar";
 import { LayoutDashboard, Folder, Flag, Settings, Users } from "lucide-react";
 import { ProjectSearch } from "@/domains/projects/components/project-search/project-search";
-import type { Project } from "@peek-a-boo/shared/node_modules/.prisma/client";
+import type { Project } from "@prisma/client";
 
 interface AuthSideBarProps {
   projects: Project[];

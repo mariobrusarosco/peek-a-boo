@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { Project } from '@peek-a-boo/shared/node_modules/.prisma/client';
-import { formatDistanceToNow } from 'date-fns';
+import type { Project } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
 
 interface ProjectListProps {
   projects: Project[];
@@ -20,8 +20,8 @@ export default function ProjectList({ projects }: ProjectListProps) {
               Created {formatDistanceToNow(new Date(project.createdAt))} ago
             </div>
             <div className="mt-4 flex justify-end">
-              <a 
-                href={`/projects/${project.id}`} 
+              <a
+                href={`/projects/${project.id}`}
                 className="text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300"
               >
                 View Details →
