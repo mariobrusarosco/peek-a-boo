@@ -1,5 +1,5 @@
-import { PrismaClient } from '.prisma/client';
-export * from '.prisma/client';
+import { PrismaClient } from "@prisma/client";
+export * from "@prisma/client";
 declare global {
     var prisma: PrismaClient | undefined;
 }
@@ -22,7 +22,7 @@ export interface FlagEvaluationResponse {
         id: string;
         name?: string;
     };
-    source: 'RULE' | 'DEFAULT' | 'ERROR';
+    source: "RULE" | "DEFAULT" | "ERROR";
     ruleId?: string;
 }
 export interface SDKOptions {

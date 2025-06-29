@@ -1,4 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+
+// Re-export specific types
+export type { Project, User, UserRole } from "@prisma/client";
+
+// Export the Prisma namespace for utility types
+export type { Prisma };
 
 // Export types and enums from Prisma
 export * from "@prisma/client";
