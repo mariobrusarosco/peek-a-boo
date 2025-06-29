@@ -1,7 +1,7 @@
-import { PrismaClient } from '.prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 // Export types and enums from Prisma
-export * from '.prisma/client';
+export * from "@prisma/client";
 
 // Create a singleton Prisma client
 declare global {
@@ -10,7 +10,7 @@ declare global {
 
 export const prisma = global.prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma;
 }
 
@@ -38,7 +38,7 @@ export interface FlagEvaluationResponse {
     id: string;
     name?: string;
   };
-  source: 'RULE' | 'DEFAULT' | 'ERROR';
+  source: "RULE" | "DEFAULT" | "ERROR";
   // If the flag is evaluated by a rule, this will contain the rule ID
   ruleId?: string;
 }
@@ -61,4 +61,4 @@ export interface ApiResponse<T = any> {
     message: string;
     code?: string;
   };
-} 
+}

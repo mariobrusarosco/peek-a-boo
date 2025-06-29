@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import type { Project } from "@prisma/client";
+import type { Project } from "@peek-a-boo/shared";
 
 export async function fetchProjects(): Promise<Project[]> {
   const response = await fetch(API_ENDPOINTS.PROJECTS.LIST, {

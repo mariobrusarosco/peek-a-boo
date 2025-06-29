@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/domains/ui-system/components/ui/dropdown-menu";
-import type { Project } from "@prisma/client";
+import type { Project } from "@peek-a-boo/shared";
 
 interface ProjectSearchProps {
   projects: Project[];

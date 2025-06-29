@@ -1,6 +1,6 @@
 "use client";
 
-import type { Project } from "@prisma/client";
+import type { Project } from "@peek-a-boo/shared";
 import { formatDistanceToNow } from "date-fns";
 
 interface ProjectListProps {
