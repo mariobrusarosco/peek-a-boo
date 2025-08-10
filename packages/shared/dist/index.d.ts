@@ -1,9 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+export type { Project, User, UserRole } from "@prisma/client";
+export type { Prisma };
 export * from "@prisma/client";
 declare global {
     var prisma: PrismaClient | undefined;
 }
-export declare const prisma: PrismaClient<import(".prisma/client").Prisma.PrismaClientOptions, never, import("@prisma/client/runtime/library").DefaultArgs>;
+export declare const prisma: PrismaClient<Prisma.PrismaClientOptions, never, import("@prisma/client/runtime/library").DefaultArgs>;
 export interface FlagContext {
     userId?: string;
     sessionId?: string;

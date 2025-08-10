@@ -16,6 +16,10 @@ apps/sdk-service/dist
 dist
 build
 
+# Development logs
+dev-logs.log
+*.log
+
 # Railway
 .railway
 
@@ -24,3 +28,4 @@ build
 .specstory/.project.json
 # SpecStory derived-cursor-rules.mdc backup files
 .specstory/ai_rules_backups/*
+dev-logs.log

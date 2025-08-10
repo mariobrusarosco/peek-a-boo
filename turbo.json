@@ -13,6 +13,7 @@
         "NEXTAUTH_SECRET",
         "NEXT_PUBLIC_SUPABASE_URL",
         "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SDK_SERVICE_URL",
         "NODE_ENV",
         "VERCEL_ENV",
         "VERCEL_URL"
@@ -23,6 +24,45 @@
       "persistent": true
     },
     "lint": {},
-    "lint:types": {}
+    "lint:types": {},
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "test:cov": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "format": {
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "prisma:generate": {
+      "cache": false,
+      "inputs": ["prisma/schema.prisma", "prisma/migrations/**"]
+    },
+    "prisma:studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "prisma:migrate:dev": {
+      "cache": false,
+      "inputs": ["prisma/schema.prisma", "prisma/migrations/**"]
+    },
+    "prisma:seed": {
+      "cache": false,
+      "dependsOn": ["prisma:generate"]
+    }
   }
 }
