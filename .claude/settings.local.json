@@ -6,7 +6,9 @@
       "Bash(NEXT_PUBLIC_SDK_SERVICE_URL=https://peek-a-boo-sdk-service-production.up.railway.app pnpm build:dashboard)",
       "Bash(find:*)",
       "Bash(chmod:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm run prisma:generate:*)"
     ],
     "deny": []
   }

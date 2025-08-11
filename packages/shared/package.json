@@ -14,14 +14,15 @@
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
+    "@vercel/postgres": "0.10.0",
     "bcrypt": "^5.1.1"
   },
   "devDependencies": {
+    "@prisma/generator-helper": "5.22.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.19",
     "prisma": "5.22.0",
     "prisma-erd-generator": "^1.11.2",
-    "@prisma/generator-helper": "5.22.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.2.2"
   }
