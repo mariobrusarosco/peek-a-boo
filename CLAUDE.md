@@ -11,7 +11,7 @@ Peek-a-boo is a modern feature flag management platform built as a Turborepo mon
 - **Dashboard** (`apps/dashboard`): Next.js application for feature flag management UI
 - **SDK Service** (`apps/sdk-service`): NestJS backend API for SDK delivery and WebSockets
 - **Client SDK** (`packages/client-sdk`): JavaScript library for client applications
-- **Shared** (`packages/shared`): Common database schema, Prisma client, and shared utilities
+- **Core** (`packages/core`): Common database schema, Prisma client, and shared utilities
 
 ## Development Commands
 
@@ -21,7 +21,7 @@ Peek-a-boo is a modern feature flag management platform built as a Turborepo mon
 pnpm install
 
 # 2. Build shared package FIRST (critical for monorepo)
-pnpm build:shared
+pnpm build:core
 
 # 3. Start development database
 docker-compose up -d
@@ -30,13 +30,13 @@ docker-compose up -d
 # Copy .env.example files in each package:
 # - apps/dashboard/.env.local
 # - apps/sdk-service/.env  
-# - packages/shared/.env
+# - packages/core/.env
 
 # 5. Run database migrations
-pnpm run prisma:migrate:dev --workspace=packages/shared
+pnpm run prisma:migrate:dev --workspace=packages/core
 
 # 6. Generate Prisma client after schema changes
-pnpm run prisma:generate --workspace=packages/shared
+pnpm run prisma:generate --workspace=packages/core
 ```
 
 ### Development
@@ -59,7 +59,7 @@ pnpm build
 pnpm build:dashboard --filter=@peek-a-boo/dashboard...
 pnpm build:sdk-service --filter=@peek-a-boo/sdk-service...
 pnpm build:client-sdk
-pnpm build:shared
+pnpm build:core
 
 # Turborepo specific commands
 turbo run build --force           # Ignore cache
@@ -83,26 +83,26 @@ pnpm format
 ### Database Management
 ```bash
 # Open Prisma Studio (localhost:5555)
-pnpm run prisma:studio --workspace=packages/shared
+pnpm run prisma:studio --workspace=packages/core
 
 # Run migrations in development
-pnpm run prisma:migrate:dev --workspace=packages/shared
+pnpm run prisma:migrate:dev --workspace=packages/core
 
 # Deploy migrations to production
-pnpm run prisma:migrate:deploy --workspace=packages/shared
+pnpm run prisma:migrate:deploy --workspace=packages/core
 
 # Seed database
-pnpm run prisma:seed --workspace=packages/shared
+pnpm run prisma:seed --workspace=packages/core
 
 # Generate ERD diagram
-pnpm run prisma:erd --workspace=packages/shared
+pnpm run prisma:erd --workspace=packages/core
 ```
 
 ## Key Architecture Patterns
 
 ### Database Architecture
-- **Centralized Schema**: All database models are defined in `packages/shared/prisma/schema.prisma`
-- **Shared Client**: All applications access the database through `@peek-a-boo/shared`
+- **Centralized Schema**: All database models are defined in `packages/core/prisma/schema.prisma`
+- **Shared Client**: All applications access the database through `@peek-a-boo/core`
 - **Type Safety**: Prisma generates TypeScript types shared across all packages
 
 ### Domain-Driven Structure
@@ -111,8 +111,8 @@ Both dashboard and sdk-service follow domain-based organization:
 - Each domain contains: components/, services/, dto/ (for NestJS), etc.
 
 ### Import Patterns
-- Use type imports: `import type { Project } from "@peek-a-boo/shared"`
-- Workspace dependencies: `"@peek-a-boo/shared": "workspace:*"`
+- Use type imports: `import type { Project } from "@peek-a-boo/core"`
+- Workspace dependencies: `"@peek-a-boo/core": "workspace:*"`
 
 ## Technology Stack
 
@@ -135,12 +135,12 @@ Both dashboard and sdk-service follow domain-based organization:
 - Example: `create-project-button.tsx`, `project-list-container.tsx`
 
 ### TypeScript Imports
-- Always use type imports for types: `import type { Project } from "@peek-a-boo/shared"`
-- Use workspace dependencies: `"@peek-a-boo/shared": "workspace:*"`
+- Always use type imports for types: `import type { Project } from "@peek-a-boo/core"`
+- Use workspace dependencies: `"@peek-a-boo/core": "workspace:*"`
 
 ### Database Changes
-1. Modify `packages/shared/prisma/schema.prisma`
-2. Run `pnpm run prisma:migrate:dev --workspace=packages/shared`
+1. Modify `packages/core/prisma/schema.prisma`
+2. Run `pnpm run prisma:migrate:dev --workspace=packages/core`
 3. The migration will automatically generate the Prisma client
 
 ### Testing Strategy
@@ -167,7 +167,7 @@ SUPABASE_DB_PASSWORD=your_password
 Environment files needed:
 - `apps/dashboard/.env.local`
 - `apps/sdk-service/.env`  
-- `packages/shared/.env`
+- `packages/core/.env`
 
 ### Local Development Database
 The PostgreSQL database runs on port 5438 (not default 5432) via Docker Compose.
@@ -187,7 +187,7 @@ pnpm install
 
 ### Turborepo Build Issues
 - Environment variables MUST be listed in `turbo.json` `env` array
-- Always build shared package before others: `pnpm build:shared`
+- Always build shared package before others: `pnpm build:core`
 - Use `--force` flag to bypass cache when needed
 - Clear cache with `rm -rf .turbo`
 
@@ -200,7 +200,7 @@ pnpm install
 - Ensure PostgreSQL is running: `docker-compose up -d`
 - Database runs on port 5438 (not default 5432)
 - Verify DATABASE_URL in environment files
-- Run migrations: `pnpm run prisma:migrate:dev --workspace=packages/shared`
+- Run migrations: `pnpm run prisma:migrate:dev --workspace=packages/core`
 
 ### Client SDK Issues
 - Client SDK uses ESM: requires `"type": "module"` in package.json

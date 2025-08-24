@@ -28,7 +28,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.0.0",
     "@nestjs/websockets": "^10.0.0",
-    "@peek-a-boo/shared": "workspace:*",
+    "@peek-a-boo/core": "workspace:*",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "reflect-metadata": "^0.1.13",

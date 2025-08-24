@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProjectsService } from '@/domains/projects/projects.service';
-import type { Project } from '@peek-a-boo/shared';
+import type { Project } from '@peek-a-boo/core';
 import type { CreateProjectDto } from '@/domains/projects/dto/create-project.dto';
 import { ProjectErrors } from '@/domains/projects/errors';
 import type { ApiError } from '@/domains/global/typing/api-error';

@@ -1,5 +1,5 @@
 {
-  "name": "@peek-a-boo/shared",
+  "name": "@peek-a-boo/core",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",

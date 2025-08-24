@@ -13,7 +13,9 @@
       "Bash(pnpm dev:*)",
       "Bash(turbo run:*)",
       "Bash(npx turbo run:*)",
-      "Bash(pnpm turbo run:*)"
+      "Bash(pnpm turbo run:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": []
   }

@@ -62,14 +62,14 @@ This is a monorepo containing:
 
 - **Dashboard**: A Next.js application for the admin interface (`apps/dashboard`)
 - **SDK Service**: A NestJS application for SDK delivery and WebSockets (`apps/sdk-service`)
-- **Shared**: Shared code and database schema (`packages/shared`)
+- **Core**: Shared code and database schema (`packages/core`)
 - **Client SDK**: The JavaScript SDK for clients (`packages/client-sdk`)
 
 ### Database Architecture
 
 Our database architecture follows a centralized approach:
 
-- **Central Management**: The database schema and client are managed through the `@peek-a-boo/shared` package
+- **Central Management**: The database schema and client are managed through the `@peek-a-boo/core` package
 - **Unified Access**: All services (dashboard, sdk-service, client-sdk) access the same database through this shared package
 - **Prisma ORM**: We use Prisma for type-safe database access and migrations
 - **PostgreSQL**: Our primary database is PostgreSQL, supporting complex relationships and transactions
@@ -130,7 +130,7 @@ docker-compose up -d
 4. **Initialize the database**
 
 ```bash
-pnpm run prisma:migrate:dev --workspace=packages/shared
+pnpm run prisma:migrate:dev --workspace=packages/core
 ```
 
 ### Running the Applications
@@ -184,7 +184,7 @@ pnpm format
 Use Prisma Studio to view and edit your database:
 
 ```bash
-pnpm run prisma:studio --workspace=packages/shared
+pnpm run prisma:studio --workspace=packages/core
 ```
 
 This will open Prisma Studio at http://localhost:5555.
@@ -196,7 +196,7 @@ For a comprehensive guide on database setup and management, see our [Database Se
 After making changes to the Prisma schema:
 
 ```bash
-pnpm run prisma:migrate:dev --workspace=packages/shared
+pnpm run prisma:migrate:dev --workspace=packages/core
 ```
 
 ## Troubleshooting
