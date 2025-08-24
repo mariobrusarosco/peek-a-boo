@@ -27,7 +27,10 @@ pnpm build:shared
 docker-compose up -d
 
 # 4. Setup environment variables (see Environment section)
-# Copy .env.example files in each package
+# Copy .env.example files in each package:
+# - apps/dashboard/.env.local
+# - apps/sdk-service/.env  
+# - packages/shared/.env
 
 # 5. Run database migrations
 pnpm run prisma:migrate:dev --workspace=packages/shared
@@ -132,7 +135,8 @@ Both dashboard and sdk-service follow domain-based organization:
 - Example: `create-project-button.tsx`, `project-list-container.tsx`
 
 ### TypeScript Imports
-- Always use type imports for types: `import type { ICreateAccountForm } from "../schemas/investment-account"`
+- Always use type imports for types: `import type { Project } from "@peek-a-boo/shared"`
+- Use workspace dependencies: `"@peek-a-boo/shared": "workspace:*"`
 
 ### Database Changes
 1. Modify `packages/shared/prisma/schema.prisma`
@@ -150,19 +154,23 @@ Critical environment variables must be configured for each package and listed in
 
 ```bash
 # Required for builds (must be in turbo.json env array)
-DATABASE_URL=postgresql://...
-SUPABASE_PROJECT_ID=your_project_id
-SUPABASE_DB_PASSWORD=your_password
+DATABASE_URL=postgresql://postgres:postgres@localhost:5438/feature_flags_dev
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_secret
-NEXT_PUBLIC_SUPABASE_URL=https://...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+NEXT_PUBLIC_SDK_SERVICE_URL=http://localhost:6001
+
+# Production variables
+SUPABASE_PROJECT_ID=your_project_id
+SUPABASE_DB_PASSWORD=your_password
 ```
 
 Environment files needed:
 - `apps/dashboard/.env.local`
 - `apps/sdk-service/.env`  
 - `packages/shared/.env`
+
+### Local Development Database
+The PostgreSQL database runs on port 5438 (not default 5432) via Docker Compose.
 
 ## Common Issues & Solutions
 
@@ -190,8 +198,14 @@ pnpm install
 
 ### Database Connection Issues
 - Ensure PostgreSQL is running: `docker-compose up -d`
+- Database runs on port 5438 (not default 5432)
 - Verify DATABASE_URL in environment files
 - Run migrations: `pnpm run prisma:migrate:dev --workspace=packages/shared`
+
+### Client SDK Issues
+- Client SDK uses ESM: requires `"type": "module"` in package.json
+- Run `generate-dts` before client SDK watch mode
+- For JSON imports in ESM: use `readFileSync` + `JSON.parse`
 
 ### Detailed Solutions
 Check `docs/fixing-history/` directory for comprehensive solutions to specific issues:

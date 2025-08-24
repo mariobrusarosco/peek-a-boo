@@ -8,7 +8,12 @@
       "Bash(chmod:*)",
       "Bash(rm:*)",
       "Bash(pnpm add:*)",
-      "Bash(pnpm run prisma:generate:*)"
+      "Bash(pnpm run prisma:generate:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(turbo run:*)",
+      "Bash(npx turbo run:*)",
+      "Bash(pnpm turbo run:*)"
     ],
     "deny": []
   }

@@ -4,8 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:ci": "turbo run build --filter=@peek-a-boo/dashboard...",
-    "dev": "turbo run dev",
-    "dev:logs": "echo \"=== Development Session Started at $(date) ===\" >> dev-logs.log && echo \"\" >> dev-logs.log && pnpm dev 2>&1 | tee -a dev-logs.log",
+    "dev": "> dev.log && turbo run dev 2>&1 | tee dev.log",
     "debug:logs": "echo '📋 Debug request - Please check dev-logs.log for latest errors and issues' && tail -50 dev-logs.log",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
