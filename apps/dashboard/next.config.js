@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@peek-a-boo/shared'],
+  transpilePackages: ['@peek-a-boo/core'],
   
   // Enable source maps for better debugging in production
   productionBrowserSourceMaps: true,

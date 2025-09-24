@@ -1,6 +1,6 @@
 "use client";
 
-import type { Project } from "@peek-a-boo/shared";
+import type { Project } from "@peek-a-boo/core";
 import { formatDistanceToNow } from "date-fns";
 
 interface ProjectListProps {

@@ -16,7 +16,7 @@ import {
 } from "@/domains/ui-system/components/ui/sidebar";
 import { LayoutDashboard, Folder, Flag, Settings, Users } from "lucide-react";
 import { ProjectSearch } from "@/domains/projects/components/project-search/project-search";
-import type { Project } from "@peek-a-boo/shared";
+import type { Project } from "@peek-a-boo/core";
 
 interface AuthSideBarProps {
   projects: Project[];
