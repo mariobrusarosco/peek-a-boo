@@ -10,20 +10,25 @@ Shared code, types, and database schema for the Peek-a-boo feature flag system.
 cp .env.example .env
 ```
 
-2. Update the `.env` file with your database connection string.
+2. Update the `.env` file with your database connection strings:
+
+```bash
+DATABASE_URL="postgresql://postgres:postgres@localhost:5438/feature_flags_dev"
+DATABASE_DIRECT_URL="postgresql://postgres:postgres@localhost:5438/feature_flags_dev"
+```
 
 3. Initialize the database:
 
 ```bash
 # From the root of the monorepo
-pnpm run prisma:migrate:dev --workspace=packages/core
+cd packages/core && npx prisma migrate dev
 ```
 
 4. Generate Prisma client:
 
 ```bash
 # From the root of the monorepo
-pnpm run prisma:generate --workspace=packages/core
+cd packages/core && npx prisma generate
 ```
 
 ## Usage
@@ -47,11 +52,11 @@ After making changes to the database schema:
 1. Create a migration:
 
 ```bash
-pnpm run prisma:migrate:dev --workspace=packages/core
+cd packages/core && npx prisma migrate dev
 ```
 
 2. Rebuild the package:
 
 ```bash
-pnpm run build --workspace=packages/core
+pnpm build:core
 ``` 

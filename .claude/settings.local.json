@@ -15,7 +15,10 @@
       "Bash(npx turbo run:*)",
       "Bash(pnpm turbo run:*)",
       "Bash(grep:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(volta install:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(npx prisma db pull:*)"
     ],
     "deny": []
   }
