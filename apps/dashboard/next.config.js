@@ -9,7 +9,12 @@ const nextConfig = {
     serverSourceMaps: true,
   },
   
-  webpack: (config) => {
+  webpack: (config, { dev, isServer }) => {
+    // Force source maps in production
+    if (!dev) {
+      config.devtool = isServer ? 'source-map' : 'hidden-source-map';
+    }
+    
     // Ensure proper module resolution
     config.resolve.fallback = { 
       ...config.resolve.fallback,
