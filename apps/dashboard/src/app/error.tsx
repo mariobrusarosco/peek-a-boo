@@ -56,7 +56,7 @@ export default function Error({ error, reset }: ErrorProps) {
             'Unable to connect to our services. Please check your internet connection.' :
            isAPIError ? 
             'Our backend service is currently unavailable. We\'re working to resolve this.' :
-            'An unexpected error occurred. Our team has been notified.'}
+            'An unexpected error occurred. Our team has been notified!'}
         </p>
 
         {/* Error Details (Development) */}
