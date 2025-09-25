@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(pnpm install:*)",
-      "Bash(pnpm build:shared:*)",
+      "Bash(pnpm build:core:*)",
       "Bash(NEXT_PUBLIC_SDK_SERVICE_URL=https://peek-a-boo-sdk-service-production.up.railway.app pnpm build:dashboard)",
       "Bash(find:*)",
       "Bash(chmod:*)",
