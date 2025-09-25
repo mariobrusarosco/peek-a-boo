@@ -1,27 +1,53 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import rollbar from "@/lib/rollbar";
 import type { Project } from "@peek-a-boo/core";
 
 export async function fetchProjects(): Promise<Project[]> {
   const url = API_ENDPOINTS.PROJECTS.LIST;
   
-  console.log('FETCH PROJECTS URL:', url);
-  
-  const response = await fetch(url, {
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  console.log('RESPONSE STATUS:', response.status);
-  console.log('RESPONSE URL:', response.url);
-  console.log('RESPONSE OK:', response.ok);
+    if (!response.ok) {
+      const responseText = await response.text();
+      
+      // Log detailed error to Rollbar
+      const errorData = {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        responseBody: responseText,
+        headers: Object.fromEntries(response.headers.entries()),
+        timestamp: new Date().toISOString(),
+      };
 
-  if (!response.ok) {
-    const responseText = await response.text();
-    console.log('ERROR RESPONSE BODY:', responseText);
-    throw new Error(`Failed to fetch projects: ${response.statusText} (${response.status}) from ${response.url}`);
+      rollbar.error('Failed to fetch projects', errorData);
+      
+      throw new Error(`Failed to fetch projects: ${response.statusText} (${response.status}) from ${response.url}`);
+    }
+
+    const data = await response.json();
+    
+    // Log successful fetch
+    rollbar.info('Projects fetched successfully', {
+      url,
+      count: data.length,
+    });
+    
+    return data;
+  } catch (error) {
+    // Catch any other errors (network issues, JSON parsing, etc.)
+    rollbar.error('Fatal error in fetchProjects', {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    
+    throw error;
   }
-
-  return response.json();
 }

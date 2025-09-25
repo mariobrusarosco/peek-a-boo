@@ -18,7 +18,9 @@
       "Bash(pnpm build:*)",
       "Bash(volta install:*)",
       "Bash(docker-compose up:*)",
-      "Bash(npx prisma db pull:*)"
+      "Bash(npx prisma db pull:*)",
+      "WebSearch",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
