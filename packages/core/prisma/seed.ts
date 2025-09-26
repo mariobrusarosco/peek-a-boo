@@ -1,5 +1,5 @@
-import { PrismaClient } from '../node_modules/.prisma/client';
-import type { UserRole } from '../node_modules/.prisma/client';
+import { PrismaClient } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 import { hash } from 'bcrypt';
 
 // Initialize the Prisma client

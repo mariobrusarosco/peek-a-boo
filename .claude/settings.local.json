@@ -24,7 +24,11 @@
       "WebFetch(domain:nextjs.org)",
       "Bash(pnpm run lint:types:*)",
       "Bash(pnpm run lint:*)",
-      "Bash(pnpm list:*)"
+      "Bash(pnpm list:*)",
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "Bash(pnpm run prisma:seed:*)",
+      "Bash(npx prisma db seed:*)"
     ],
     "deny": []
   }

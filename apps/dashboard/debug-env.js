@@ -1,1 +1,0 @@
-console.log('NEXT_PUBLIC_SDK_SERVICE_URL:', process.env.NEXT_PUBLIC_SDK_SERVICE_URL)

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import type { Project } from '@peek-a-boo/core';
 import type { CreateProjectDto } from '@/domains/projects/dto/create-project.dto';
@@ -26,9 +26,9 @@ export class ProjectsService {
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     const user = await this.prismaService.user.findFirst();
     
-    // TODO:  Add API Error Mapping 
+    // ✅ Proper HTTP status: 500 for system configuration issues
     if (!user) {
-      throw new NotFoundException('No users found in the system');
+      throw new InternalServerErrorException('System not properly configured - no users available');
     }
     
     return this.prismaService.project.create({
