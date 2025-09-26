@@ -9,6 +9,8 @@ export type ProjectActionState = {
   success?: boolean
   error?: string
   project?: Project
+  message?: string
+  timestamp?: string
 }
 
 export async function createProjectAction(
@@ -75,9 +77,12 @@ export async function createProjectAction(
     // Revalidate the projects page cache
     revalidatePath('/projects')
     
+    // ✅ Enhanced response for optimistic updates
     return {
       success: true,
       project,
+      message: `Project "${project.name}" created successfully!`,
+      timestamp: new Date().toISOString(),
     }
   } catch (error) {
     rollbar.error('Fatal error in createProjectAction', {
