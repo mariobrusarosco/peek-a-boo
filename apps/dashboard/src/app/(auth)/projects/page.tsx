@@ -13,7 +13,6 @@ export default function ProjectsPage() {
 
       <div>
         <div className="pt-6">
-          {/* Suspense boundary for data streaming */}
           <Suspense fallback={<Loading />}>
             <ProjectListContainer />
           </Suspense>

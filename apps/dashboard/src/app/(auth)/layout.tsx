@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
 export default function AuthLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex bg-background">
+      <div className="min-h-screen flex bg-background w-full">
         <AuthSideBarContainer />
 
         <div className="flex-1 flex flex-col">

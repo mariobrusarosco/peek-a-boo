@@ -7,7 +7,8 @@ export async function fetchProjects(): Promise<Project[]> {
   
   try {
     const response = await fetch(url, {
-      cache: "no-store",
+      // ✅ Better caching strategy - revalidate every 60 seconds
+      next: { revalidate: 60, tags: ['projects'] },
       headers: {
         "Content-Type": "application/json",
       },

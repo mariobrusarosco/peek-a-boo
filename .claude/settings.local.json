@@ -20,7 +20,11 @@
       "Bash(docker-compose up:*)",
       "Bash(npx prisma db pull:*)",
       "WebSearch",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:nextjs.org)",
+      "Bash(pnpm run lint:types:*)",
+      "Bash(pnpm run lint:*)",
+      "Bash(pnpm list:*)"
     ],
     "deny": []
   }
