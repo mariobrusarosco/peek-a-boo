@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from '@/domains/ui-system/components/ui/button';
 import { fetchFeatureFlags, fetchProjects } from '@/domains/projects/services/project.service';
+import CreateFeatureFlagButton from '@/domains/feature-flags/components/new-project/new-project-button';
 import type { FeatureFlag, Project } from '@peek-a-boo/core';
 
 interface ProjectPageProps {
@@ -24,12 +25,12 @@ async function fetchProjectById(id: string): Promise<Project | null> {
 
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { id } = params;
+  const { id: projectId } = params;
   
   // TODO: Refactor these calls
-  const organizationId = "cmg074k3e000e47r8ry0rkjkz";
-  const project = await fetchProjectById(id);
-  const featureFlags = await fetchFeatureFlags(organizationId);
+  const organizationId = "cmg2zdg9g000er7qyn92xepc9";
+  const project = await fetchProjectById(projectId);
+  const featureFlags = await fetchFeatureFlags(projectId, organizationId);
 
   if (!project) {
     notFound();
@@ -103,9 +104,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-900">Feature Flags</h2>
-              <Button size="sm">
+              <CreateFeatureFlagButton projectId={projectId} size="sm">
                 Create Flag
-              </Button>
+              </CreateFeatureFlagButton>
             </div>
           </div>
           <div className="px-6 py-8">
@@ -130,9 +131,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <p className="text-gray-500 mb-4">
                     Create your first feature flag to start managing features for this project.
                   </p>
-                  <Button>
+                  <CreateFeatureFlagButton projectId={projectId}>
                     Create Your First Flag
-                  </Button>
+                  </CreateFeatureFlagButton>
                 </>
               )}
             </div>

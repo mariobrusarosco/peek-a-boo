@@ -28,7 +28,9 @@
       "Bash(curl:*)",
       "Bash(node:*)",
       "Bash(pnpm run prisma:seed:*)",
-      "Bash(npx prisma db seed:*)"
+      "Bash(npx prisma db seed:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import ProjectListContainer from "../../../domains/projects/components/project-list/project-list-container";
-import CreateProjectButton from "../../../domains/projects/components/project-button/create-project-button";
+import ProjectListContainer from "@/domains/projects/components/project-list/project-list-container";
 import Loading from "./loading";
 import Link from "next/link";
 import { Button } from "@/domains/ui-system/components/ui/button";
+import NewProjectButton from "@/domains/projects/components/new-project/new-project-button";
 
 export default function ProjectsPage() {
   return (
@@ -17,7 +17,7 @@ export default function ProjectsPage() {
             </Button>
           </Link>
         </div>
-        <CreateProjectButton />
+        <NewProjectButton />
       </div>
 
       <div>

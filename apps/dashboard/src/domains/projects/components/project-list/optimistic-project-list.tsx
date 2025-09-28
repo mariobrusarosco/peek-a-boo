@@ -2,7 +2,7 @@
 
 import { useOptimistic, useState } from 'react';
 import { Button } from '@/domains/ui-system/components/ui/button';
-import OptimisticProjectModal from '../project-button/optimistic-project-modal';
+import OptimisticProjectModal from '@/domains/projects/components/optimistic-project-modal';
 import type { Project } from '@peek-a-boo/core';
 
 interface OptimisticProjectListProps {

@@ -14,5 +14,6 @@ export const API_ENDPOINTS = {
   FLAGS: {
     LIST: (organizationId: string) => `${API_BASE_URL}/feature-flags/${organizationId}`,
     DETAIL: (id: string) => `${API_BASE_URL}/feature-flags/${id}`,
+    CREATE: `${API_BASE_URL}/feature-flags`,
   }
 };

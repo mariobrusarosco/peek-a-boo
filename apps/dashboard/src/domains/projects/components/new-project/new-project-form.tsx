@@ -6,11 +6,11 @@ import { Input } from '@/domains/ui-system/components/ui/input'
 import { createProjectAction, type ProjectActionState } from '@/domains/projects/actions/project-actions'
 import { useEffect } from 'react'
 
-interface CreateProjectFormProps {
+interface NewProjectFormProps {
   onSuccess?: () => void
 }
 
-export default function CreateProjectForm({ onSuccess }: CreateProjectFormProps) {
+export function NewProjectForm({ onSuccess }: NewProjectFormProps) {
   const [state, formAction, isPending] = useActionState<ProjectActionState | null, FormData>(
     createProjectAction,
     null

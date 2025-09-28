@@ -48,11 +48,11 @@ export async function fetchProjects(): Promise<Project[]> {
 }
 
 
-export async function fetchFeatureFlags(organizationId: string): Promise<FeatureFlag[]> {
+export async function fetchFeatureFlags(projectId: string, organizationId: string): Promise<FeatureFlag[]> {
   const url = API_ENDPOINTS.FLAGS.LIST(organizationId);
 
   const response = await fetch(url, {
-    next: { revalidate: 60, tags: ['feature-flags'] },
+    next: { revalidate: 60, tags: ['feature-flags', projectId] },
     headers: {
       "Content-Type": "application/json",
     },

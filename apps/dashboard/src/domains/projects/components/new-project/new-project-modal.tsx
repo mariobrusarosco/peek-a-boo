@@ -13,15 +13,15 @@ import {
 import { Input } from '@/domains/ui-system/components/ui/input';
 import { createProjectAction, type ProjectActionState } from '@/domains/projects/actions/project-actions';
 
-interface CreateProjectModalProps {
+interface NewProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function CreateProjectModal({
+export default function NewProjectModal({
   isOpen,
   onClose,
-}: CreateProjectModalProps) {
+}: NewProjectModalProps) {
   // ✅ useActionState handles state management for us
   const [state, formAction, isPending] = useActionState<ProjectActionState | null, FormData>(
     createProjectAction,
