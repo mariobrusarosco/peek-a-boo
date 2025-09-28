@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import rollbar from "@/lib/rollbar";
-import type { Project } from "@peek-a-boo/core";
+import type { FeatureFlag, Project } from "@peek-a-boo/core";
 
 export async function fetchProjects(): Promise<Project[]> {
   const url = API_ENDPOINTS.PROJECTS.LIST;
@@ -34,12 +34,6 @@ export async function fetchProjects(): Promise<Project[]> {
 
     const data = await response.json();
     
-    // Log successful fetch
-    rollbar.info('Projects fetched successfully', {
-      url,
-      count: data.length,
-    });
-    
     return data;
   } catch (error) {
     // Catch any other errors (network issues, JSON parsing, etc.)
@@ -51,4 +45,37 @@ export async function fetchProjects(): Promise<Project[]> {
     
     throw error;
   }
+}
+
+
+export async function fetchFeatureFlags(organizationId: string): Promise<FeatureFlag[]> {
+  const url = API_ENDPOINTS.FLAGS.LIST(organizationId);
+
+  const response = await fetch(url, {
+    next: { revalidate: 60, tags: ['feature-flags'] },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const responseText = await response.text();
+    
+    // Log detailed error to Rollbar
+    const errorData = {
+      url,
+      status: response.status,
+      statusText: response.statusText,
+      responseBody: responseText,
+      headers: Object.fromEntries(response.headers.entries()),
+      timestamp: new Date().toISOString(),
+    };
+
+    rollbar.error('Failed to fetch feature flags', errorData);
+    
+    throw new Error(`Failed to fetch feature flags: ${response.statusText} (${response.status}) from ${response.url}`);
+  }
+
+
+  return response.json();
 }
