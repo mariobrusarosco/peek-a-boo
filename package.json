@@ -24,6 +24,7 @@
     "build:production": "pnpm build:core && cd packages/core && npx prisma migrate deploy && cd ../.. && pnpm build:sdk-service",
     "prisma:migrate:dev": "cd packages/core && npx prisma migrate dev",
     "prisma:migrate:deploy": "pnpm run prisma:migrate:deploy --workspace=packages/core",
+    "prisma:seed": "pnpm --filter=@peek-a-boo/core prisma:seed",
     "setup:env": "./scripts/setup-env.sh",
     "postinstall": "cd packages/core && prisma generate"
   },

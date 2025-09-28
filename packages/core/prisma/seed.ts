@@ -11,6 +11,14 @@ prisma.$connect();
 async function main() {
   console.log('Starting seed...');
 
+  // Clean database before seeding
+  console.log('Cleaning database...');
+  await prisma.featureFlag.deleteMany();
+  await prisma.organization.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.user.deleteMany();
+  console.log('Database cleaned successfully!');
+
   // Create dummy users
   const users = [
     {
@@ -43,8 +51,6 @@ async function main() {
     })
   );
 
-  console.log(`Created ${createdUsers.length} users`);
-
   // Create dummy projects
   const projects = [
     { name: 'Web Application', userId: createdUsers[0].id },
@@ -68,6 +74,55 @@ async function main() {
   );
 
   console.log(`Created ${createdProjects.length} projects`);
+
+const organizations = [
+  {
+    name: 'Organization 1',
+  },
+];
+
+const createdOrganizations = await Promise.all(
+  organizations.map(async (organization) => {
+    return prisma.organization.create({
+      data: organization,
+    });
+  })
+);
+
+const featureFlags = [
+  {
+    name: 'Feature Flag 1',
+    organizationId: createdOrganizations[0].id,
+    projectId: createdProjects[0].id,
+    value: {
+      enabled: true,
+    }
+  },
+  {
+    name: 'Feature Flag 2',
+    organizationId: createdOrganizations[0].id,
+    projectId: createdProjects[0].id,
+    value: {
+      enabled: false,
+    }
+  },
+];
+
+const createdFeatureFlags = await Promise.all(
+  featureFlags.map(async (featureFlag) => {
+    return prisma.featureFlag.create({
+      data: featureFlag,
+    });
+  })
+);
+
+  console.log(`Created ${createdFeatureFlags.length} feature flags`);
+  console.log(`Created ${createdOrganizations.length} organizations`);
+  console.log(`Created ${createdProjects.length} projects`);
+  console.log(`Created ${createdUsers.length} users`);
+
+
+
   console.log('Seed completed successfully!');
 }
 

@@ -12,7 +12,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `${API_BASE_URL}/users/${id}`,
   },
   FLAGS: {
-    LIST: `${API_BASE_URL}/feature-flags`,
+    LIST: (organizationId: string) => `${API_BASE_URL}/feature-flags/${organizationId}`,
     DETAIL: (id: string) => `${API_BASE_URL}/feature-flags/${id}`,
   }
 };

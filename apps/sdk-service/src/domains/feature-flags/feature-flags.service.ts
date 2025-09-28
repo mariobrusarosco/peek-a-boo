@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { FeatureFlag } from '@peek-a-boo/core';
 
 @Injectable()
 export class FeatureFlagsService {
@@ -15,5 +16,14 @@ export class FeatureFlagsService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+  }
+
+
+  async getAllFeatureFlags(organizationId: string): Promise<FeatureFlag[]> {
+    return this.prismaService.featureFlag.findMany({
+      where: {
+        organizationId
+      }
+    });
   }
 } 
