@@ -75,23 +75,12 @@ export async function createFeatureFlagAction(
     if (!response.ok) {
       const errorText = await response.text()
       
-      rollbar.error(new Error(`Failed to create feature flag via Server Action: ${response.statusText}`), {
-        url: API_ENDPOINTS.FLAGS.CREATE,
+      console.error('Feature flag API error:', {
         status: response.status,
         statusText: response.statusText,
         responseBody: errorText,
-        featureFlagName: name,
-        projectId,
-        organizationId,
-        custom: {
-          apiEndpoint: API_ENDPOINTS.FLAGS.CREATE,
-          httpStatus: response.status,
-          httpStatusText: response.statusText,
-          apiResponse: errorText,
-          requestedFeatureFlagName: name,
-          targetProjectId: projectId,
-          targetOrganizationId: organizationId,
-        }
+        url: API_ENDPOINTS.FLAGS.CREATE,
+        requestData: { name, projectId, organizationId, enabled }
       })
 
       throw new Error(`Failed to create feature flag: ${response.statusText}`);
@@ -117,10 +106,10 @@ export async function createFeatureFlagAction(
       timestamp: new Date().toISOString(),
     }
   } catch (error) {
-    rollbar.error('Fatal error in createFeatureFlagAction', {
+    console.error('Feature flag creation error:', {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      featureFlagName: name,
+      name,
       projectId,
       organizationId,
     })
