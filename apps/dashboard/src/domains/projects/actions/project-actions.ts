@@ -53,18 +53,23 @@ export async function createProjectAction(
     if (!response.ok) {
       const errorText = await response.text()
       
-      rollbar.error('Failed to create project via Server Action', {
+      rollbar.error(new Error(`Failed to create project via Server Action: ${response.statusText}`), {
         url: API_ENDPOINTS.PROJECTS.CREATE,
         status: response.status,
         statusText: response.statusText,
         responseBody: errorText,
         projectName: name,
+        custom: {
+          apiEndpoint: API_ENDPOINTS.PROJECTS.CREATE,
+          httpStatus: response.status,
+          httpStatusText: response.statusText,
+          apiResponse: errorText,
+          requestedProjectName: name,
+        }
       })
 
-      return {
-        success: false,
-        error: `Failed to create project: ${response.statusText}`
-      }
+      throw new Error(`Failed to create project: ${response.statusText}`);
+
     }
 
     const project = await response.json()
@@ -91,9 +96,6 @@ export async function createProjectAction(
       projectName: name,
     })
 
-    return {
-      success: false,
-      error: 'An unexpected error occurred. Please try again.'
-    }
+    throw error;
   }
 }

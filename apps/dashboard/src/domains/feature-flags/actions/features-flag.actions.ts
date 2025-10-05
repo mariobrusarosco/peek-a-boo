@@ -75,7 +75,7 @@ export async function createFeatureFlagAction(
     if (!response.ok) {
       const errorText = await response.text()
       
-      rollbar.error('Failed to create feature flag via Server Action', {
+      rollbar.error(new Error(`Failed to create feature flag via Server Action: ${response.statusText}`), {
         url: API_ENDPOINTS.FLAGS.CREATE,
         status: response.status,
         statusText: response.statusText,
@@ -83,12 +83,18 @@ export async function createFeatureFlagAction(
         featureFlagName: name,
         projectId,
         organizationId,
+        custom: {
+          apiEndpoint: API_ENDPOINTS.FLAGS.CREATE,
+          httpStatus: response.status,
+          httpStatusText: response.statusText,
+          apiResponse: errorText,
+          requestedFeatureFlagName: name,
+          targetProjectId: projectId,
+          targetOrganizationId: organizationId,
+        }
       })
 
-      return {
-        success: false,
-        error: `Failed to create feature flag: ${response.statusText}`
-      }
+      throw new Error(`Failed to create feature flag: ${response.statusText}`);
     }
 
     const featureFlag = await response.json()
@@ -119,9 +125,6 @@ export async function createFeatureFlagAction(
       organizationId,
     })
 
-    return {
-      success: false,
-      error: 'An unexpected error occurred. Please try again.'
-    }
+    throw error
   }
 }
