@@ -1,5 +1,4 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import rollbar from "@/lib/rollbar";
 import type { FeatureFlag, Project } from "@peek-a-boo/core";
 
 export async function fetchProjects(): Promise<Project[]> {
@@ -16,19 +15,16 @@ export async function fetchProjects(): Promise<Project[]> {
 
     if (!response.ok) {
       const responseText = await response.text();
-      
-      // Log detailed error to Rollbar
-      const errorData = {
+
+      console.error('Failed to fetch projects:', {
         url,
         status: response.status,
         statusText: response.statusText,
         responseBody: responseText,
         headers: Object.fromEntries(response.headers.entries()),
         timestamp: new Date().toISOString(),
-      };
+      });
 
-      rollbar.error('Failed to fetch projects', errorData);
-      
       throw new Error(`Failed to fetch projects: ${response.statusText} (${response.status}) from ${response.url}`);
     }
 
@@ -37,12 +33,12 @@ export async function fetchProjects(): Promise<Project[]> {
     return data;
   } catch (error) {
     // Catch any other errors (network issues, JSON parsing, etc.)
-    rollbar.error('Fatal error in fetchProjects', {
+    console.error('Fatal error in fetchProjects:', {
       url,
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
-    
+
     throw error;
   }
 }
@@ -60,19 +56,16 @@ export async function fetchFeatureFlags(projectId: string, organizationId: strin
 
   if (!response.ok) {
     const responseText = await response.text();
-    
-    // Log detailed error to Rollbar
-    const errorData = {
+
+    console.error('Failed to fetch feature flags:', {
       url,
       status: response.status,
       statusText: response.statusText,
       responseBody: responseText,
       headers: Object.fromEntries(response.headers.entries()),
       timestamp: new Date().toISOString(),
-    };
+    });
 
-    rollbar.error('Failed to fetch feature flags', errorData);
-    
     throw new Error(`Failed to fetch feature flags: ${response.statusText} (${response.status}) from ${response.url}`);
   }
 

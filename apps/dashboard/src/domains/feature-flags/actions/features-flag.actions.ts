@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { API_ENDPOINTS } from '@/lib/constants/api'
-import rollbar from '@/lib/rollbar'
 import type { FeatureFlag } from '@peek-a-boo/core'
 
 export type FeatureFlagActionState = {
@@ -88,7 +87,7 @@ export async function createFeatureFlagAction(
 
     const featureFlag = await response.json()
 
-    rollbar.info('Feature flag created successfully via Server Action', {
+    console.log('Feature flag created successfully via Server Action:', {
       featureFlagId: featureFlag.id,
       featureFlagName: featureFlag.name,
       projectId,

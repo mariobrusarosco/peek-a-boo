@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { API_ENDPOINTS } from '@/lib/constants/api'
-import rollbar from '@/lib/rollbar'
 import type { Project } from '@peek-a-boo/core'
 
 export type ProjectActionState = {
@@ -52,20 +51,13 @@ export async function createProjectAction(
 
     if (!response.ok) {
       const errorText = await response.text()
-      
-      rollbar.error(new Error(`Failed to create project via Server Action: ${response.statusText}`), {
+
+      console.error('Failed to create project via Server Action:', {
         url: API_ENDPOINTS.PROJECTS.CREATE,
         status: response.status,
         statusText: response.statusText,
         responseBody: errorText,
         projectName: name,
-        custom: {
-          apiEndpoint: API_ENDPOINTS.PROJECTS.CREATE,
-          httpStatus: response.status,
-          httpStatusText: response.statusText,
-          apiResponse: errorText,
-          requestedProjectName: name,
-        }
       })
 
       throw new Error(`Failed to create project: ${response.statusText}`);
@@ -74,7 +66,7 @@ export async function createProjectAction(
 
     const project = await response.json()
 
-    rollbar.info('Project created successfully via Server Action', {
+    console.log('Project created successfully via Server Action:', {
       projectId: project.id,
       projectName: project.name,
     })
@@ -90,7 +82,7 @@ export async function createProjectAction(
       timestamp: new Date().toISOString(),
     }
   } catch (error) {
-    rollbar.error('Fatal error in createProjectAction', {
+    console.error('Fatal error in createProjectAction:', {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
       projectName: name,
