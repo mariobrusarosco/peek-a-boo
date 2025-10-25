@@ -33,10 +33,10 @@ docker-compose up -d
 # - packages/core/.env
 
 # 5. Run database migrations
-pnpm run prisma:migrate:dev --workspace=packages/core
+pnpm run prisma:migrate:dev
 
-# 6. Generate Prisma client after schema changes
-pnpm run prisma:generate --workspace=packages/core
+# 6. Generate Prisma client (automatically runs via postinstall hook)
+# If needed manually: pnpm --filter=@peek-a-boo/core prisma:generate
 ```
 
 ### Development
@@ -83,19 +83,22 @@ pnpm format
 ### Database Management
 ```bash
 # Open Prisma Studio (localhost:5555)
-pnpm run prisma:studio --workspace=packages/core
+pnpm --filter=@peek-a-boo/core prisma:studio
 
 # Run migrations in development
-pnpm run prisma:migrate:dev --workspace=packages/core
+pnpm run prisma:migrate:dev
 
 # Deploy migrations to production
-pnpm run prisma:migrate:deploy --workspace=packages/core
+pnpm run prisma:migrate:deploy
 
 # Seed database
-pnpm run prisma:seed --workspace=packages/core
+pnpm run prisma:seed
+
+# Generate Prisma client
+pnpm --filter=@peek-a-boo/core prisma:generate
 
 # Generate ERD diagram
-pnpm run prisma:erd --workspace=packages/core
+pnpm --filter=@peek-a-boo/core prisma:erd
 ```
 
 ## Key Architecture Patterns

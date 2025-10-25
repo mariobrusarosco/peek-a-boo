@@ -30,7 +30,10 @@
       "Bash(pnpm run prisma:seed:*)",
       "Bash(npx prisma db seed:*)",
       "Bash(cat:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(pnpm run prisma:migrate:dev:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(docker compose:*)"
     ],
     "deny": []
   }

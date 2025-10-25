@@ -124,14 +124,50 @@ volta install pnpm
 3. **Start the development database**
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-4. **Initialize the database**
+4. **Set up environment variables**
+
+Create the `.env` file for the core package:
 
 ```bash
-pnpm run prisma:migrate:dev --workspace=packages/core
+# Create packages/core/.env
+cat > packages/core/.env << EOF
+DATABASE_URL="postgresql://postgres:postgres@localhost:5438/feature_flags_dev"
+DATABASE_DIRECT_URL="postgresql://postgres:postgres@localhost:5438/feature_flags_dev"
+EOF
 ```
+
+You can also copy from the example file:
+```bash
+cp packages/core/.env.example packages/core/.env
+# Then add DATABASE_DIRECT_URL to the file
+```
+
+5. **Initialize the database**
+
+```bash
+pnpm run prisma:migrate:dev
+```
+
+6. **Seed the database** (optional, but recommended for first-time setup)
+
+```bash
+pnpm run prisma:seed
+```
+
+This will create sample users, projects, organizations, and feature flags. Login credentials:
+- **Email**: `admin@peek-a-boo.dev`
+- **Password**: `password123`
+
+7. **Build the core package** (required before running dev servers)
+
+```bash
+pnpm build:core
+```
+
+This step is critical for the monorepo - all other packages depend on the core package being built first.
 
 ### Running the Applications
 
@@ -184,7 +220,7 @@ pnpm format
 Use Prisma Studio to view and edit your database:
 
 ```bash
-pnpm run prisma:studio --workspace=packages/core
+pnpm --filter=@peek-a-boo/core prisma:studio
 ```
 
 This will open Prisma Studio at http://localhost:5555.
@@ -196,7 +232,7 @@ For a comprehensive guide on database setup and management, see our [Database Se
 After making changes to the Prisma schema:
 
 ```bash
-pnpm run prisma:migrate:dev --workspace=packages/core
+pnpm run prisma:migrate:dev
 ```
 
 ## Troubleshooting
