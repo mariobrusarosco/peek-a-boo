@@ -33,7 +33,8 @@
       "Bash(mkdir:*)",
       "Bash(pnpm run prisma:migrate:dev:*)",
       "Bash(docker-compose ps:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(tree:*)"
     ],
     "deny": []
   }

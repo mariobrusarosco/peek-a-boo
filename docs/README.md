@@ -8,11 +8,23 @@ This documentation is designed to help engineers understand and work effectively
 
 ### 📖 Documentation Files
 
-| File | Purpose | Audience |
+| File/Folder | Purpose | Audience |
 |------|---------|----------|
 | **[turborepo-guide.md](./turborepo-guide.md)** | Complete guide to our Turborepo setup | All engineers (onboarding) |
 | **[architecture-diagrams.md](./architecture-diagrams.md)** | Visual system architecture with Mermaid diagrams | Technical leads, architects |
 | **[turborepo-cheatsheet.md](./turborepo-cheatsheet.md)** | Quick reference for daily development | Daily development use |
+| **[guides/](./guides/)** | In-depth guides on specific topics | All engineers |
+| **[decision/](./decision/)** | Architecture decision records (ADRs) | Technical leads, architects |
+
+### 📚 Key Guides
+
+| Guide | Description |
+|-------|-------------|
+| **[API Architecture](./guides/012-api-architecture.md)** ⭐ | Explains Dashboard vs Client SDK APIs, data flow, and security model |
+| **[React 19 Server Components](./guides/011-react-19-server-components-guide.md)** | How we use React 19 features in the dashboard |
+| **[Database Setup](./guides/database/005-database-setup.md)** | Database configuration and management |
+| **[Environment Variables](./guides/007-environment-variables-setup.md)** | Managing env vars in Turborepo |
+| **[Railway Deployment](./guides/008-railway-deployment-setup.md)** | Deploying SDK Service to Railway |
 
 ## 🚀 Quick Start
 
@@ -100,11 +112,12 @@ All diagrams use **Mermaid syntax** and can be viewed in:
 
 | Metric | Value |
 |--------|-------|
-| Total pages | 4 |
-| Diagrams | 8 |
-| Code examples | 50+ |
-| Commands covered | 30+ |
-| Last updated | January 2025 |
+| Total pages | 30+ |
+| Guides | 15+ |
+| Diagrams | 10+ |
+| Code examples | 100+ |
+| Commands covered | 50+ |
+| Last updated | October 2025 |
 
 ---
 

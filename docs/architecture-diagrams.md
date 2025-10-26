@@ -9,35 +9,36 @@ graph TB
             Dashboard["🖥️ Dashboard<br/>(Next.js)"]
             SDKService["⚡ SDK Service<br/>(NestJS)"]
         end
-        
+
         subgraph "Packages"
-            Shared["📦 Shared<br/>(Prisma + Types)"]
+            Core["📦 Core<br/>(Prisma + Types)"]
             ClientSDK["📚 Client SDK<br/>(Rollup)"]
         end
-        
+
         subgraph "External Services"
             Supabase["🗄️ Supabase<br/>(Database)"]
             Vercel["🚀 Vercel<br/>(Dashboard Host)"]
             Railway["🚂 Railway<br/>(API Host)"]
         end
     end
-    
-    Dashboard --> Shared
-    SDKService --> Shared
-    ClientSDK --> Shared
-    
-    Dashboard --> Supabase
-    SDKService --> Supabase
-    
-    Dashboard -.-> Vercel
-    SDKService -.-> Railway
-    
+
+    Dashboard -->|Types only| Core
+    SDKService -->|Types + Prisma| Core
+    ClientSDK -->|Types only| Core
+
+    Dashboard -->|API calls| SDKService
+    ClientSDK -->|API calls| SDKService
+    SDKService -->|Direct access| Supabase
+
+    Dashboard -.->|Deployed to| Vercel
+    SDKService -.->|Deployed to| Railway
+
     classDef app fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef package fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef external fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    
+
     class Dashboard,SDKService app
-    class Shared,ClientSDK package
+    class Core,ClientSDK package
     class Supabase,Vercel,Railway external
 ```
 
@@ -46,22 +47,22 @@ graph TB
 ```mermaid
 graph LR
     subgraph "Build Pipeline"
-        A[📦 shared<br/>prisma generate + tsc] --> B[📚 client-sdk<br/>rollup build]
+        A[📦 core<br/>prisma generate + tsc] --> B[📚 client-sdk<br/>rollup build]
         A --> C[🖥️ dashboard<br/>next build]
         A --> D[⚡ sdk-service<br/>nest build]
     end
-    
+
     subgraph "Dev Pipeline"
-        E[📦 shared<br/>tsc --watch] -.-> F[📚 client-sdk<br/>rollup --watch]
+        E[📦 core<br/>tsc --watch] -.-> F[📚 client-sdk<br/>rollup --watch]
         E -.-> G[🖥️ dashboard<br/>next dev :3000]
-        E -.-> H[⚡ sdk-service<br/>nest start --watch :3001]
+        E -.-> H[⚡ sdk-service<br/>nest start --watch :6001]
     end
-    
-    classDef shared fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef build fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef dev fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    
-    class A,E shared
+
+    class A,E core
     class B,C,D build
     class F,G,H dev
 ```
@@ -98,25 +99,27 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    subgraph "Dependency Graph"
-        Shared["📦 @peek-a-boo/shared<br/>• Prisma client<br/>• Database types<br/>• Shared utilities"]
-        
-        Dashboard["🖥️ @peek-a-boo/dashboard<br/>• Next.js app<br/>• Admin interface<br/>• Authentication"]
-        
-        SDKService["⚡ @peek-a-boo/sdk-service<br/>• NestJS API<br/>• WebSocket server<br/>• Feature flag logic"]
-        
-        ClientSDK["📚 @peek-a-boo/client-sdk<br/>• JavaScript SDK<br/>• Feature flag client<br/>• Multiple formats"]
+    subgraph "Build-Time Dependencies"
+        Core["📦 @peek-a-boo/core<br/>• Prisma client<br/>• Database types<br/>• Shared utilities"]
+
+        Dashboard["🖥️ @peek-a-boo/dashboard<br/>• Next.js app<br/>• Admin interface<br/>• Uses types only ✅<br/>• Calls API for data 🌐"]
+
+        SDKService["⚡ @peek-a-boo/sdk-service<br/>• NestJS API<br/>• WebSocket server<br/>• Uses Prisma client ⚡<br/>• Direct DB access 🗄️"]
+
+        ClientSDK["📚 @peek-a-boo/client-sdk<br/>• JavaScript SDK<br/>• Feature flag client<br/>• Uses types only ✅<br/>• Calls API for data 🌐"]
     end
-    
-    Shared --> Dashboard
-    Shared --> SDKService  
-    Shared --> ClientSDK
-    
-    classDef shared fill:#fff8e1,stroke:#f57f17,stroke-width:3px
-    classDef dependent fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
-    class Shared shared
-    class Dashboard,SDKService,ClientSDK dependent
+
+    Core -->|Types| Dashboard
+    Core -->|Types + Prisma| SDKService
+    Core -->|Types| ClientSDK
+
+    classDef core fill:#fff8e1,stroke:#f57f17,stroke-width:3px
+    classDef apiConsumer fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef dbConsumer fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+
+    class Core core
+    class Dashboard,ClientSDK apiConsumer
+    class SDKService dbConsumer
 ```
 
 ## 🚀 Deployment Flow
@@ -161,34 +164,53 @@ graph TB
 ## 🎯 Feature Flag Flow
 
 ```mermaid
-graph LR
-    subgraph "Admin Flow"
-        Admin["👨‍💼 Admin"] --> Dashboard
-        Dashboard --> API["📡 SDK Service API"]
+graph TB
+    subgraph "Management Flow"
+        Admin["👨‍💼 Admin User"]
+        Dashboard["🖥️ Dashboard<br/>(Next.js)"]
+        Admin --> Dashboard
     end
-    
-    subgraph "Client Flow"  
-        Client["👤 End User"] --> App["📱 Client App"]
-        App --> SDK["📚 Client SDK"]
-        SDK --> API
+
+    subgraph "Client Flow"
+        EndUser["👤 End User"]
+        ClientApp["📱 Client App<br/>(React/Vue/etc)"]
+        ClientSDK["📚 Client SDK<br/>(peek-a-boo)"]
+        EndUser --> ClientApp
+        ClientApp --> ClientSDK
     end
-    
+
+    subgraph "API Layer"
+        SDKService["⚡ SDK Service<br/>(NestJS)"]
+        ManagementAPI["📝 Management APIs<br/>(CRUD flags)"]
+        RuntimeAPI["🚀 Runtime APIs<br/>(Evaluate flags)"]
+        WebSocket["🔌 WebSocket<br/>(Real-time updates)"]
+
+        SDKService --> ManagementAPI
+        SDKService --> RuntimeAPI
+        SDKService --> WebSocket
+    end
+
     subgraph "Data Layer"
-        API --> DB["🗄️ Supabase DB"]
-        API --> WS["🔌 WebSocket"]
+        Database[("🗄️ PostgreSQL<br/>(Supabase)")]
     end
-    
-    WS -.-> SDK
-    
+
+    Dashboard -->|"POST /feature-flags<br/>GET /projects"| ManagementAPI
+    ClientSDK -->|"GET /api/v1/flags"| RuntimeAPI
+    ManagementAPI --> Database
+    RuntimeAPI --> Database
+    WebSocket -.->|"Real-time updates"| ClientSDK
+
     classDef user fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef app fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef service fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef api fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef service fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
     classDef data fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    
-    class Admin,Client user
-    class Dashboard,App,SDK app
-    class API,WS service
-    class DB data
+
+    class Admin,EndUser user
+    class Dashboard,ClientApp,ClientSDK app
+    class ManagementAPI,RuntimeAPI,WebSocket api
+    class SDKService service
+    class Database data
 ```
 
 ## 📈 Performance Metrics

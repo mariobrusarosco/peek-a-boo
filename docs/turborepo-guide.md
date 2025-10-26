@@ -24,14 +24,17 @@
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
 │  │  Dashboard  │  │ SDK Service │  │ Client SDK  │    │
 │  │  (Next.js)  │  │  (NestJS)   │  │ (Rollup)    │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘    │
-│         │                 │                 │          │
-│         └─────────────────┼─────────────────┘          │
-│                           │                            │
-│                  ┌─────────────┐                       │
-│                  │   Shared    │                       │
-│                  │  (Prisma)   │                       │
-│                  └─────────────┘                       │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬───────┘    │
+│         │ API calls      │ DB access       │ API calls  │
+│         └────────────────┼─────────────────┘            │
+│                          │                              │
+│                 ┌────────┴─────────┐                    │
+│                 │   Core Package   │                    │
+│                 │ (Prisma + Types) │                    │
+│                 └──────────────────┘                    │
+│                          │                              │
+│                          ▼                              │
+│                     PostgreSQL                          │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -46,7 +49,7 @@ peek-a-boo/
 │   ├── 📁 dashboard/           # Next.js frontend
 │   └── 📁 sdk-service/         # NestJS backend
 ├── 📁 packages/                # Shared libraries
-│   ├── 📁 shared/              # Database & utilities
+│   ├── 📁 core/                # Database & utilities
 │   └── 📁 client-sdk/          # JavaScript SDK
 ├── 📄 package.json             # Root workspace config
 ├── 📄 turbo.json              # Turborepo configuration
@@ -55,43 +58,70 @@ peek-a-boo/
 
 ### Package Roles & Responsibilities
 
-| Package | Type | Purpose | Tech Stack |
-|---------|------|---------|------------|
-| `@peek-a-boo/dashboard` | **App** | Admin dashboard for managing feature flags | Next.js, React, Tailwind, NextAuth |
-| `@peek-a-boo/sdk-service` | **App** | Backend API & WebSocket service | NestJS, Socket.io, Express |
-| `@peek-a-boo/shared` | **Package** | Database models, utilities, types | Prisma, TypeScript |
-| `@peek-a-boo/client-sdk` | **Package** | Client library for feature flags | Rollup, TypeScript |
+| Package | Type | Purpose | Tech Stack | Database Access |
+|---------|------|---------|------------|-----------------|
+| `@peek-a-boo/dashboard` | **App** | Admin dashboard for managing feature flags | Next.js, React, Tailwind, NextAuth | ❌ API only |
+| `@peek-a-boo/sdk-service` | **App** | Backend API & WebSocket service | NestJS, Socket.io, Express | ✅ Direct (Prisma) |
+| `@peek-a-boo/core` | **Package** | Database models, utilities, types | Prisma, TypeScript | N/A (provides client) |
+| `@peek-a-boo/client-sdk` | **Package** | Client library for feature flags | Rollup, TypeScript | ❌ API only |
 
 ---
 
 ## 🔗 Dependency Graph
 
-### Visual Dependency Flow
+### Build-Time Dependencies
 ```
 Build Order (Bottom → Top):
 
-Level 1: 📦 @peek-a-boo/shared
+Level 1: 📦 @peek-a-boo/core
          ├── Prisma Client Generation
-         ├── Database Types
+         ├── Database Types (Used by ALL ✅)
          └── Shared Utilities
               │
               ├─────────────────┬─────────────────┐
               ▼                 ▼                 ▼
 Level 2: 📦 client-sdk    🚀 dashboard      🚀 sdk-service
-         ├── SDK Build     ├── Next.js       ├── NestJS
-         ├── Type Defs     ├── UI Components ├── API Routes
-         └── Rollup        └── Auth Setup    └── WebSockets
+         │                │                 │
+         ├─ Imports:      ├─ Imports:       ├─ Imports:
+         │  • Types ✅    │  • Types ✅     │  • Types ✅
+         │  • Prisma ❌   │  • Prisma ❌    │  • Prisma ✅
+         │                │                 │
+         └─ For data:     └─ For data:      └─ For data:
+            Uses API ➜       Uses API ➜        Uses DB ⚡
 
 Legend: 📦 = Package, 🚀 = Application
+```
+
+**Key Points:**
+- ✅ **All packages import TypeScript types** from `@peek-a-boo/core`
+- ⚡ **Only SDK Service uses Prisma** for database access
+- 🌐 **Dashboard & Client SDK call APIs** for data (no direct DB access)
+
+### Runtime Data Flow
+```
+End User App ─────▶ Client SDK ─────┐
+                                     │
+                                     ▼
+Dashboard (Next.js) ───────────▶ SDK Service (NestJS) ───▶ Database
+                                     │
+                                     └─────────────────────▶ WebSocket
+                                                                │
+                                                                ▼
+                                                         Real-time updates
+
+Data Flow:
+• Dashboard → SDK Service → Database (Management APIs)
+• Client SDK → SDK Service → Database (Runtime APIs)
+• SDK Service ← Database (Only service with DB access)
 ```
 
 ### Workspace Dependencies
 ```json
 {
-  "dashboard": ["@peek-a-boo/shared"],
-  "sdk-service": ["@peek-a-boo/shared"], 
-  "client-sdk": ["@peek-a-boo/shared"],
-  "shared": []  // No internal dependencies
+  "dashboard": ["@peek-a-boo/core"],      // Types only, calls API for data
+  "sdk-service": ["@peek-a-boo/core"],    // Types + Prisma, direct DB access
+  "client-sdk": ["@peek-a-boo/core"],     // Types only, calls API for data
+  "core": []                              // No internal dependencies
 }
 ```
 
@@ -122,10 +152,10 @@ Legend: 📦 = Package, 🚀 = Application
 ```
 1. turbo run build
    │
-   ├── 📦 shared: prisma generate + tsc
-   │   └── ✅ Generates types & client
+   ├── 📦 core: prisma generate + tsc
+   │   └── ✅ Generates Prisma client & TypeScript types
    │
-   ├── 📦 client-sdk: rollup build  
+   ├── 📦 client-sdk: rollup build
    │   └── ✅ Creates UMD/ESM bundles
    │
    ├── 🚀 dashboard: next build
@@ -135,15 +165,15 @@ Legend: 📦 = Package, 🚀 = Application
        └── ✅ Compiles to dist/
 ```
 
-#### 🔄 Development Process  
+#### 🔄 Development Process
 ```
 1. turbo run dev
    │
-   ├── 📦 shared: tsc --watch
-   ├── 📦 client-sdk: rollup --watch  
-   ├── 🚀 dashboard: next dev (port 3000)
-   └── 🚀 sdk-service: nest start --watch (port 3001)
-   
+   ├── 📦 core: tsc --watch (types only)
+   ├── 📦 client-sdk: rollup --watch
+   ├── 🚀 dashboard: next dev (port 3000) → Calls API
+   └── 🚀 sdk-service: nest start --watch (port 6001) → Accesses DB
+
    All processes run in parallel! 🎉
 ```
 
@@ -170,8 +200,11 @@ pnpm build --filter=@peek-a-boo/dashboard...
 # Test specific package
 pnpm test --filter=@peek-a-boo/sdk-service
 
-# Run command in specific workspace
-pnpm --filter=@peek-a-boo/shared prisma:studio
+# Run command in specific workspace (e.g., Prisma Studio)
+pnpm --filter=@peek-a-boo/core prisma:studio
+
+# Build core package only
+pnpm build:core
 ```
 
 ### Development Flow Diagram
@@ -227,27 +260,31 @@ pnpm build:sdk-service     # Service for Railway
 ## 🎯 Best Practices
 
 ### ✅ Do's
-- **Use workspace references**: `"@peek-a-boo/shared": "workspace:*"`
+- **Use workspace references**: `"@peek-a-boo/core": "workspace:*"`
 - **Leverage filtering**: Target specific packages with `--filter`
 - **Trust the cache**: Let Turborepo handle incremental builds
 - **Keep shared code in packages**: Don't duplicate logic across apps
 - **Use consistent scripts**: Same script names across all packages
+- **Import types only when needed**: `import type { ... }` from core
 
-### ❌ Don'ts  
+### ❌ Don'ts
 - **Don't bypass the build system**: Always use `turbo run` commands
 - **Don't ignore cache**: `.turbo/` folder speeds up everything
 - **Don't create circular dependencies**: Keep the dependency graph clean
 - **Don't duplicate dependencies**: Use workspace inheritance
 - **Don't skip type checking**: `lint:types` catches issues early
+- **Don't access database directly from Dashboard/Client SDK**: Use API calls
 
 ### 🔧 Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
 | Build fails randomly | Clear cache: `turbo run build --force` |
-| Types not updating | Rebuild shared: `pnpm build:shared` |
+| Types not updating | Rebuild core: `pnpm build:core` |
+| Prisma client issues | Regenerate: `pnpm --filter=@peek-a-boo/core prisma:generate` |
 | Dev server issues | Restart with: `pnpm dev` |
 | Dependency conflicts | Check workspace versions in package.json |
+| API connection fails | Check SDK Service is running on port 6001 |
 
 ---
 

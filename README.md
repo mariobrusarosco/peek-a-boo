@@ -251,6 +251,7 @@ For more detailed documentation, see:
 
 - [Project Phases and Planning](planning/00-project-phases.md)
 - [Architecture Decisions](docs/decision/)
+- [Architecture Diagrams](docs/architecture-diagrams.md)
 - [Developer Guides](docs/guides/)
    - [Development Environment](docs/guides/001-development-environment.md)
    - [Database Schema](docs/guides/002-database-schema.md)
@@ -259,6 +260,8 @@ For more detailed documentation, see:
    - [CI/CD Pipeline](docs/guides/006-ci-cd-pipeline.md)
    - [Environment Variables Setup](docs/guides/007-environment-variables-setup.md)
    - [Railway Deployment Setup](docs/guides/008-railway-deployment-setup.md)
+   - [React 19 Server Components Guide](docs/guides/011-react-19-server-components-guide.md)
+   - [API Architecture Guide](docs/guides/012-api-architecture.md) ⭐ **New!**
 
 ## License
 
