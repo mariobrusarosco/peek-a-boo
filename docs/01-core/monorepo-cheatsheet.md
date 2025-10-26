@@ -11,7 +11,7 @@ pnpm dev
 
 # Start specific app only
 pnpm dev:dashboard      # Next.js on :3000
-pnpm dev:sdk-service    # NestJS on :3001
+pnpm dev:sdk-service    # NestJS on :6001
 pnpm dev:client-sdk     # Rollup watch mode
 
 # Build everything
