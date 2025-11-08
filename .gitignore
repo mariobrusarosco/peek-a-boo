@@ -29,3 +29,7 @@ dev-logs.log
 # SpecStory derived-cursor-rules.mdc backup files
 .specstory/ai_rules_backups/*
 dev-logs.log
+
+
+# Claude
+CLAUDE_COMPACTED_HISTORY.md

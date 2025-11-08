@@ -2,6 +2,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+*IMPORTANT*
+
+Custom Commands you need to watch:
+
+* "Brace for Compact" - Refer to section "Pre and Post Auto-Compact"
+* "Write a Topic" - Refet to section "Create a Garden Topic"
+
+## Pre and Post Auto-Compact
+Claude Code CLI auto-compacts conversations due context limitations, it generates a summary that's not the same.
+We kind of lose the most crucial converation parts. 
+
+Your job is to: 
+1. Summarize the WHOLE conversation 
+2. Add the summary as a new entry on the `CLAUDE_COMPACTED_HISTORY.md` 
+
+## Create a Garden Topic
+To create a Garnde Topic, you need to access the project named `garden`.
+You should have context to it because the engineer must have already added the project via Claude's `/add-dir` command.
+Your job is to understand how to create a new topic via .mdx file over there. 
+No need to do anything else on that project. Just create a new file following my instructions.
+
 ## Project Overview
 
 Peek-a-boo is a modern feature flag management platform built as a Turborepo monorepo. The platform consists of a Next.js dashboard, NestJS SDK service, and a JavaScript client SDK, all sharing a centralized database schema through the shared package.

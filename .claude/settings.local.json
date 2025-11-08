@@ -36,6 +36,9 @@
       "Bash(docker compose:*)",
       "Bash(tree:*)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "/home/mario/coding/garden/"
+    ]
   }
 }
