@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { FeatureFlag } from '@peek-a-boo/core';
+import { FeatureFlag, Environment } from '@peek-a-boo/core';
 
 export interface CreateFeatureFlagDto {
+  key: string;
   name: string;
+  description?: string;
+  enabled?: boolean;
   projectId: string;
   organizationId: string;
+  environment?: Environment;
   value: Record<string, any>;
 }
 
@@ -37,7 +41,11 @@ export class FeatureFlagsService {
   async createFeatureFlag(data: CreateFeatureFlagDto): Promise<FeatureFlag> {
     return this.prismaService.featureFlag.create({
       data: {
+        key: data.key,
         name: data.name,
+        description: data.description,
+        enabled: data.enabled ?? false,
+        environment: data.environment,
         projectId: data.projectId,
         organizationId: data.organizationId,
         value: data.value,

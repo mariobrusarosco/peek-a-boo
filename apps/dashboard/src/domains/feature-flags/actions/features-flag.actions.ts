@@ -17,9 +17,12 @@ export async function createFeatureFlagAction(
   formData: FormData
 ): Promise<FeatureFlagActionState> {
   const name = formData.get('name') as string
+  const key = formData.get('key') as string || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  const description = formData.get('description') as string || undefined
   const projectId = formData.get('projectId') as string
   const organizationId = formData.get('organizationId') as string
   const enabled = formData.get('enabled') === 'true'
+  const environment = formData.get('environment') as string || 'DEVELOPMENT'
 
   // Server-side validation
   if (!name || name.trim().length === 0) {
@@ -63,11 +66,15 @@ export async function createFeatureFlagAction(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
+        key: key.trim(),
         name: name.trim(),
+        description: description?.trim(),
+        enabled,
+        environment,
         projectId,
         organizationId,
-        value: { enabled }
+        value: {}
       }),
     })
 

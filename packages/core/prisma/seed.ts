@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Environment } from '@prisma/client';
 import type { UserRole } from '@prisma/client';
 import { hash } from 'bcrypt';
 
@@ -75,36 +75,68 @@ async function main() {
 
   console.log(`Created ${createdProjects.length} projects`);
 
+// Use environment variable for organization ID to keep it consistent across seed runs
+const SEED_ORG_ID = process.env.SEED_ORGANIZATION_ID || 'cmhqxjwpw000e2ikeps545uou';
+
 const organizations = [
   {
-    name: 'Organization 1',
+    id: SEED_ORG_ID,
+    name: 'Development Organization',
   },
 ];
 
 const createdOrganizations = await Promise.all(
   organizations.map(async (organization) => {
-    return prisma.organization.create({
-      data: organization,
+    return prisma.organization.upsert({
+      where: { id: organization.id },
+      update: { name: organization.name },
+      create: organization,
     });
   })
 );
 
+console.log(`Organization ID: ${createdOrganizations[0].id}`);
+
 const featureFlags = [
   {
-    name: 'Feature Flag 1',
+    key: 'new-checkout',
+    name: 'New Checkout Flow',
+    description: 'Enable the redesigned checkout experience',
+    enabled: true,
+    environment: Environment.DEVELOPMENT,
     organizationId: createdOrganizations[0].id,
     projectId: createdProjects[0].id,
-    value: {
-      enabled: true,
-    }
+    value: {},
   },
   {
-    name: 'Feature Flag 2',
+    key: 'new-checkout',
+    name: 'New Checkout Flow',
+    description: 'Enable the redesigned checkout experience',
+    enabled: false,
+    environment: Environment.PRODUCTION,
     organizationId: createdOrganizations[0].id,
     projectId: createdProjects[0].id,
-    value: {
-      enabled: false,
-    }
+    value: {},
+  },
+  {
+    key: 'dark-mode',
+    name: 'Dark Mode',
+    description: 'Enable dark mode theme',
+    enabled: true,
+    environment: Environment.DEVELOPMENT,
+    organizationId: createdOrganizations[0].id,
+    projectId: createdProjects[0].id,
+    value: {},
+  },
+  {
+    key: 'premium-features',
+    name: 'Premium Features',
+    description: 'Unlock premium tier features',
+    enabled: false,
+    environment: Environment.DEVELOPMENT,
+    organizationId: createdOrganizations[0].id,
+    projectId: createdProjects[0].id,
+    value: {},
   },
 ];
 

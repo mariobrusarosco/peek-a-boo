@@ -26,9 +26,8 @@ async function fetchProjectById(id: string): Promise<Project | null> {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { id: projectId } = params;
-  
-  // TODO: Refactor these calls
-  const organizationId = "cmg2zdg9g000er7qyn92xepc9";
+
+  const organizationId = process.env.ORGANIZATION_ID!;
   const project = await fetchProjectById(projectId);
   const featureFlags = await fetchFeatureFlags(projectId, organizationId);
 

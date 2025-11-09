@@ -45,19 +45,25 @@ model Project {
 
 
 model FeatureFlag {
-  id        String   @id @default(cuid())
-  name      String
-  value     Json
+  id          String      @id @default(cuid())
+  key         String      // Unique identifier for the flag (e.g., "new-checkout")
+  name        String      // Display name
+  description String?     // Optional description
+  enabled     Boolean     @default(false)
+  value       Json        // JSON value for variations (future use)
+  environment Environment @default(DEVELOPMENT)
 
   projectId String
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   organizationId String
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
+  // Unique constraint: one flag key per project per environment
+  @@unique([key, projectId, environment])
   @@map("feature_flags")
 }
 
@@ -77,4 +83,10 @@ model Organization {
 enum UserRole {
   ADMIN
   MEMBER
+}
+
+enum Environment {
+  DEVELOPMENT
+  STAGING
+  PRODUCTION
 }
