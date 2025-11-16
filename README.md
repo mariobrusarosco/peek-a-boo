@@ -235,6 +235,15 @@ After making changes to the Prisma schema:
 pnpm run prisma:migrate:dev
 ```
 
+
+# Client SDK
+
+## Build SDK
+
+```shell
+pnpm build --filter=@peek-a-boo/react-sdk
+```
+
 ## Troubleshooting
 
 We maintain documentation on common issues and their fixes in the `@docs/fixing-history` directory:

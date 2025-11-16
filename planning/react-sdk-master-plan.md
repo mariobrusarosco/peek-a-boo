@@ -989,7 +989,44 @@ describe('useFeatureFlag', () => {
 4. Break problem into smaller pieces
 5. Ask for help
 
+### Workflow Notes
+- **Incremental approval required**: Complete one phase, show results, get approval before proceeding to next phase
+- **Don't rush ahead**: User is experienced and wants to review progress at each checkpoint
+- **Think systemically**: Consider cascade effects (similar to schema changes lesson from Phase 0)
+
+### Design Philosophy
+- **Future-proof API**: Even if MVP is simple, API should not break when adding features
+- **Developer Experience**: Clear error messages, good TypeScript support, intuitive API
+- **Monorepo-aware**: Follow existing patterns from dashboard/sdk-service (domain structure, naming conventions)
+
 ---
 
-**Last Updated:** November 8, 2025
-**Status:** Phase 0 - Ready to begin verification
+## ⏱️ Timeline Estimates
+
+**Phase 1 (Core Client):** 2-3 hours
+- Types and HTTP client: ~1 hour
+- FeatureFlagClient: ~1 hour
+- Testing: ~1 hour
+
+**Phase 2 (React Integration):** 2-3 hours
+- Context and Provider: ~1.5 hours
+- Hooks implementation: ~1 hour
+- Testing: ~1 hour
+
+**Phase 3 (Testing & QA):** 2-3 hours
+- Coverage and edge cases: ~1 hour
+- Integration tests: ~1 hour
+- Example app: ~1 hour
+
+**Phase 4 (Documentation):** 1-2 hours
+- README and API docs: ~1.5 hours
+
+**Phase 5 (Publishing):** 1 hour
+- Pre-publish checks and npm publish: ~1 hour
+
+**Total Estimated:** ~8-14 hours for complete MVP implementation
+
+---
+
+**Last Updated:** November 16, 2025
+**Status:** Phase 0 - Complete ✅ | Phase 1 - Ready to start

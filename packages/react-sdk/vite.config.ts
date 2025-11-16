@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'PeekabooReactSDK',
+      name: 'Peekaboo',
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'esm' : format}.js`
     },
