@@ -7,7 +7,7 @@
 
 ## 🎯 Quick Status
 
-**Current Phase:** Phase 0 - Setup & Verification
+**Current Phase:** Phase 1 - Core Client (Vanilla TypeScript)
 **Started:** November 8, 2025
 **Target MVP:** 2 weeks
 **Bundle Target:** <10KB gzipped (revised from 5KB - see technical review)
@@ -229,27 +229,28 @@ describe('useFeatureFlag', () => {
 ### Phase 0: Setup & Verification ⏳
 
 #### Prerequisites Checklist
-- [ ] **Verify SDK Service endpoints exist**
+- [x] **Verify SDK Service endpoints exist**
   ```bash
   curl http://localhost:6001/api/v1/flags?environment=development
   ```
   - If 404: Create endpoints first (see below)
   - If 200: Document response format, proceed
 
-- [ ] **Create SDK Service endpoints** (if needed)
-  - [ ] `apps/sdk-service/src/domains/flags/flags.controller.ts`
-  - [ ] `GET /api/v1/flags` - return all flags for environment
-  - [ ] Test with curl/Postman
-  - [ ] Document response format
+- [x] **Create SDK Service endpoints**
+  - [x] `apps/sdk-service/src/domains/sdk-runtime/sdk-runtime.controller.ts`
+  - [x] `GET /api/v1/flags?projectId&environment` - return all flags
+  - [x] `GET /api/v1/flags/:key?projectId&environment` - return single flag
+  - [x] Test with curl/Postman - Working successfully
+  - [x] Document response format - Documented in Garden topics
 
 #### Package Setup
-- [ ] Create `packages/react-sdk` directory
-- [ ] Initialize package.json
+- [x] Create `packages/react-sdk` directory
+- [x] Initialize package.json
   ```bash
   cd packages/react-sdk
   pnpm init
   ```
-- [ ] Configure dependencies:
+- [x] Configure dependencies:
   ```json
   {
     "name": "@peek-a-boo/react-sdk",
@@ -273,7 +274,7 @@ describe('useFeatureFlag', () => {
   }
   ```
 
-- [ ] Setup TypeScript (`tsconfig.json`)
+- [x] Setup TypeScript (`tsconfig.json`)
   ```json
   {
     "compilerOptions": {
@@ -293,7 +294,7 @@ describe('useFeatureFlag', () => {
   }
   ```
 
-- [ ] Setup Vite (`vite.config.ts`)
+- [x] Setup Vite (`vite.config.ts`)
   ```typescript
   import { defineConfig } from 'vite';
   import { resolve } from 'path';
@@ -321,7 +322,7 @@ describe('useFeatureFlag', () => {
   });
   ```
 
-- [ ] Create folder structure:
+- [x] Create folder structure:
   ```
   packages/react-sdk/
   ├── src/
@@ -345,7 +346,7 @@ describe('useFeatureFlag', () => {
   └── README.md
   ```
 
-- [ ] Add to root turbo.json:
+- [x] Add to root turbo.json:
   ```json
   {
     "pipeline": {

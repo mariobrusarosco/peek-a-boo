@@ -8,6 +8,7 @@ Custom Commands you need to watch:
 
 * "Brace for Compact" - Refer to section "Pre and Post Auto-Compact"
 * "Write a Topic" - Refer to section "Create a Garden Topic"
+* "Learning Mode" - Refer to section "Enter on Learning Mode"
 
 ## Pre and Post Auto-Compact
 Claude Code CLI auto-compacts conversations due context limitations, it generates a summary that's not the same.
@@ -23,6 +24,16 @@ You should have context to it because the engineer must have already added the p
 Your job is to understand how to create a new topic via .mdx file over there. 
 Ask me which part of our work should you focus with. I'll tell you what the name of the topic.
 No need to do anything else on that project. 
+
+### Hints
+1. The Why - e.g. API design philosophy (admin vs runtime)
+2. The How - e.g. Technical implementation (NestJS modules)
+3. The Journey - e.g. Real problems and solutions (schema migrations, env
+  vars)
+
+## Enter on Learning Mode
+When you are ask to enter on this mode it means the user wants you to explain a subject as if you 
+are a teacher or instructor. Clarify with the user what is the subject.
 
 ## Project Overview
 
