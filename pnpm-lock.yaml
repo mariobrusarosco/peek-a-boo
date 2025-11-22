@@ -291,6 +291,9 @@ importers:
 
   packages/react-sdk:
     dependencies:
+      '@peek-a-boo/core':
+        specifier: workspace:*
+        version: link:../core
       react:
         specifier: '>=16.8.0'
         version: 19.1.1
